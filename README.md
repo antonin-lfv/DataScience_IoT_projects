@@ -117,11 +117,11 @@ This software uses the following open source packages:
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
 ---
 
-> [amitmerchant.com](https://www.amitmerchant.com) &nbsp;&middot;&nbsp;
-> GitHub [@amitmerchant1990](https://github.com/amitmerchant1990) &nbsp;&middot;&nbsp;
-> Twitter [@amit_merchant](https://twitter.com/amit_merchant)
+> [antoninlefevre.com](https://antonin-lfv.github.io) &nbsp;&middot;&nbsp;
+> GitHub [@antonin-lfv](https://github.com/antonin-lfv) &nbsp;&middot;&nbsp;
+> Linkedin [@antonin](https://www.linkedin.com/in/antonin-lefevre-0110)
 
