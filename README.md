@@ -10,9 +10,13 @@
 <h4 align="center">Découvrez la data science sur Arduino et Raspberry Pi au travers de divers projets.</h4>
 
 <p align="center">
-  <a href="https://"><img src="https://img.shields.io/badge/Mat%C3%A9riel-Arduino_--_RaspberryPi-FFF" alt="Matériel - Arduino - RaspberryPi"></a>
- <a href="https://"><img src="https://img.shields.io/badge/Framework_IA-PyTorch_--_sklearn-FFF" alt="Framework IA - PyTorch - sklearn"></a>
- <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-FFF" alt="License - MIT"></a>
+ <a href="https://"><img src="https://img.shields.io/badge/Raspberry_Pi-FFF?logo=raspberry+pi&logoColor=C51A4A" alt="Raspberry Pi"></a>
+ &nbsp;
+ <a href="https://"><img src="https://img.shields.io/badge/Arduino-FFF?logo=arduino" alt="Arduino"></a>
+ &nbsp;
+ <a href="https://"><img src="https://img.shields.io/badge/PyTorch-FFF?logo=pytorch" alt="PyTorch"></a>
+ &nbsp;
+ <a href="https://"><img src="https://img.shields.io/badge/Sciait--learn-FFF?logo=scikitlearn" alt="Scikit-learn"></a>
 </p>
 
 <p align="center">
