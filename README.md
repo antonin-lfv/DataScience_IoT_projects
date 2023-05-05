@@ -7,7 +7,7 @@
   <br>
 </h1>
 
-<h4 align="center">Découvrez la data science sur Arduino et Raspberry Pi.</h4>
+<h4 align="center">Découvrez la data science sur Arduino et Raspberry Pi au travers de divers projets.</h4>
 
 <p align="center">
   <a href="https://"><img src="https://img.shields.io/badge/Mat%C3%A9riel-Arduino_--_RaspberryPi-2ea44f" alt="Matériel - Arduino - RaspberryPi"></a>
