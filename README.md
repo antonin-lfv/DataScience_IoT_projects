@@ -55,7 +55,7 @@ Pour faciliter la recherche en fonction de vos besoins, chaque projets est doté
 
 ---
 
-> [antoninlefevre.com](https://antonin-lfv.github.io) &nbsp;&middot;&nbsp;
+> Website [antoninlefevre.com](https://antonin-lfv.github.io) &nbsp;&middot;&nbsp;
 > GitHub [@antonin-lfv](https://github.com/antonin-lfv) &nbsp;&middot;&nbsp;
 > Linkedin [@antonin](https://www.linkedin.com/in/antonin-lefevre-0110)
 
