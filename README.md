@@ -35,7 +35,7 @@
 
 # Introduction
 
-Dans ce dépôt, vous trouverez une collection de projets combinant IoT et Data Science, en utilisant les plateformes Arduino et Raspberry Pi. Les codes sources sont disponibles et accompagnés d'instructions détaillées pour faciliter leur reproduction. En intégrant l'Internet des objets et l'intelligence artificielle, ces projets visent à explorer les applications pratiques et les limites de ces technologies dans divers domaines. N'hésitez pas à suggérer de nouveaux projets à inclure et à partager vos impressions sur ceux déjà présents.
+Dans ce dépôt, vous trouverez une collection de projets combinant **IoT** et **Data Science**, en utilisant les plateformes **Arduino** et **Raspberry Pi**. Les codes sources sont disponibles et accompagnés d'instructions détaillées pour faciliter leur reproduction. En intégrant l'Internet des objets et l'intelligence artificielle, ces projets visent à explorer les applications pratiques et les limites de ces technologies dans divers domaines. N'hésitez pas à suggérer de nouveaux projets à inclure et à partager vos impressions sur ceux déjà présents.
 
 
 <br>
