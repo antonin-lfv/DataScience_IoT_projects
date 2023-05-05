@@ -41,7 +41,7 @@ Dans ce dépôt, vous trouverez une collection de projets combinant **IoT** et *
 
 # Projets
 
-## Détection d'anomalies vibratoires avec capteur accéléromètre et auto-encodeur de débruitage
+### Détection d'anomalies vibratoires avec capteur accéléromètre et auto-encodeur de débruitage
 [🔗 Code source]() &middot; [📄 Article lié]()
 
 
