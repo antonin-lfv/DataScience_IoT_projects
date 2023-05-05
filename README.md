@@ -1,8 +1,8 @@
 
 <h1 align="center">
   <br>
-  <a href="http://www.amitmerchant.com/electron-markdownify"><img src="https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.png" alt="Markdownify" width="200"></a>
-  <br>
+  <a href="http://www.amitmerchant.com/electron-markdownify"><img src="images/background.png" alt="Markdownify" width="700"></a>
+  <br><br>
   Data science & IoT
   <br>
 </h1>
@@ -10,26 +10,15 @@
 <h4 align="center">Découvrez la data science sur Arduino et Raspberry Pi.</h4>
 
 <p align="center">
-  <a href="https://badge.fury.io/js/electron-markdownify">
-    <img src="https://badge.fury.io/js/electron-markdownify.svg"
-         alt="Gitter">
-  </a>
-  <a href="https://gitter.im/amitmerchant1990/electron-markdownify"><img src="https://badges.gitter.im/amitmerchant1990/electron-markdownify.svg"></a>
-  <a href="https://saythanks.io/to/bullredeyes@gmail.com">
-      <img src="https://img.shields.io/badge/SayThanks.io-%E2%98%BC-1EAEDB.svg">
-  </a>
-  <a href="https://www.paypal.me/AmitMerchant">
-    <img src="https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&amp;style=flat">
-  </a>
+  <a href="https://"><img src="https://img.shields.io/badge/Mat%C3%A9riel-Arduino_--_RaspberryPi-2ea44f" alt="Matériel - Arduino - RaspberryPi"></a>
+ <a href="https://"><img src="https://img.shields.io/badge/Framework_IA-PyTorch_--_sklearn-9055F1" alt="Framework IA - PyTorch - sklearn"></a>
+ <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-F1AC55" alt="License - MIT"></a>
 </p>
 
 <p align="center">
-  <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#download">Download</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#license">License</a>
+  <a href="#liens-utiles">Liens utiles</a> •
+  <a href="#introduction">Introduction</a> •
+  <a href="#projets">Projets</a>
 </p>
 
 ---
