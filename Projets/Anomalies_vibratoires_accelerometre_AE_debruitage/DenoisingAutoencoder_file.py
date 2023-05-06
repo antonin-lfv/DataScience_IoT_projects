@@ -5,8 +5,6 @@ from fastdist import fastdist
 
 import random
 import numpy as np
-import serial
-import time
 
 
 class DenoisingAutoencoder(nn.Module):
@@ -93,10 +91,10 @@ class AnomalyDetector:
         # print(f"Distance: {distance:.2f}")
         return distance > threshold
 
-    def save_model(self, path="Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/model.pt"):
+    def save_model(self, path="model.pt"):
         torch.save(self.model.state_dict(), path)
 
-    def load_model(self, path="Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/model.pt"):
+    def load_model(self, path="model.pt"):
         self.model.load_state_dict(torch.load(path))
 
 
@@ -108,7 +106,7 @@ if __name__ == '__main__':
     window_size = 200
     Real_time = False  # Set to True to use the model in real time
     detector = AnomalyDetector(window_size)
-    data = np.loadtxt('Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/Raw_data_5000.txt')
+    data = np.loadtxt('Raw_data_5000.txt')
     noisy_data = detector.add_noise(data)
 
     data, noisy_data = detector.normalize_data(data, noisy_data)

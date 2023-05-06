@@ -11,7 +11,7 @@ current_directory = os.getcwd()
 if current_directory not in sys.path:
     sys.path.append(current_directory)
 
-from Projets.Anomalies_vibratoires_accelerometre_AE_debruitage.DenoisingAutoencoder_file import AnomalyDetector
+from DenoisingAutoencoder_file import AnomalyDetector
 
 # ==== Parameters ==== #
 window_size = 200
