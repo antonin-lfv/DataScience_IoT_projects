@@ -93,10 +93,10 @@ class AnomalyDetector:
         # print(f"Distance: {distance:.2f}")
         return distance > threshold
 
-    def save_model(self, path="DenoisingAE/model.pt"):
+    def save_model(self, path="Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/model.pt"):
         torch.save(self.model.state_dict(), path)
 
-    def load_model(self, path="DenoisingAE/model.pt"):
+    def load_model(self, path="Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/model.pt"):
         self.model.load_state_dict(torch.load(path))
 
 
@@ -106,10 +106,9 @@ if __name__ == '__main__':
     # ================================== #
 
     window_size = 200
-    Test = False  # Set to True to test the model on a training data
     Real_time = False  # Set to True to use the model in real time
     detector = AnomalyDetector(window_size)
-    data = np.loadtxt('data/Raw_data_5000.txt')
+    data = np.loadtxt('Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/Raw_data_5000.txt')
     noisy_data = detector.add_noise(data)
 
     data, noisy_data = detector.normalize_data(data, noisy_data)
@@ -117,55 +116,4 @@ if __name__ == '__main__':
 
     detector.fit(X, y)
 
-    # ================================== #
-    #             Real Time              #
-    # ================================== #
-
-    if Real_time:
-        ser = serial.Serial('/dev/tty.usbmodem00001', 9600)
-
-        buffer = np.zeros(window_size)
-        time_step = 0.01  # adjust according to the sensor sampling rate
-
-        try:
-            print("Press CTRL+C to stop the program")
-            print("Starting...")
-            print("Waiting for shock...")
-            last_anomaly_count = 0
-            anomaly_wait_count = 200  # Number of data points to wait before sending a new anomaly message
-
-            while True:
-                # Read the data from the sensor
-                line = ser.readline().decode().strip()
-                value = float(line)
-
-                # Update the buffer
-                buffer[:-1] = buffer[1:]
-                buffer[-1] = value
-
-                # Normalize the buffer using the mean and std of the training data
-                normalized_buffer = (buffer - detector.mean_data) / detector.std_data
-
-                # Reshape the data to match the model input shape and convert to a PyTorch tensor
-                input_data = torch.tensor(normalized_buffer, dtype=torch.float32).unsqueeze(0).unsqueeze(1)
-
-                # Pass the input data through the model
-                output_data = detector.model(input_data).squeeze().detach().numpy()
-
-                # Detect if there's a shock using the predict_shock function
-                shock_detected = detector.detect_shock(normalized_buffer, output_data, threshold=30)
-
-                if shock_detected:
-                    if last_anomaly_count >= anomaly_wait_count:
-                        print("Anomaly detected!")
-                        last_anomaly_count = 0
-                    else:
-                        last_anomaly_count += 1
-                else:
-                    last_anomaly_count += 1
-
-                time.sleep(time_step)
-
-        except KeyboardInterrupt:
-            print("Stopped by the user.")
-            ser.close()
+    detector.save_model()

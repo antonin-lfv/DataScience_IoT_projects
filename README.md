@@ -58,6 +58,11 @@ L'objectif est d'identifier les chocs parmi les données du capteur en éliminan
 Nous utiliserons le capteur MPU-6050 (GY-521) et un Arduino Uno pour collecter les données d'accélération. L'interface pour visualiser 
 les données en temps réel est développé avec Streamlit. 
 
+Pour lancer l'interface, exécutez la commande suivante dans le dossier du projet :
+
+```bash
+streamlit run streamlit_real_time_interface.py
+```
 
 
 <br>
