@@ -48,7 +48,7 @@ Pour faciliter la recherche en fonction de vos besoins, chaque projets est doté
 # Projets
 
 ### Détection d'anomalies vibratoires avec capteur accéléromètre et auto-encodeur de débruitage
-[![Code source](https://img.shields.io/badge/Code_source-000?logo=Visual+Studio+Code)](https://) &nbsp; [![Article lié](https://img.shields.io/badge/Article_lié-000?logo=Medium)](https://) &nbsp; [![PyTorch](https://img.shields.io/badge/PyTorch-FFF?logo=pytorch)](https://) &nbsp;  [![Arduino](https://img.shields.io/badge/Arduino-FFF?logo=Arduino)](https://)
+[![Code source](https://img.shields.io/badge/Code_source-000?logo=Visual+Studio+Code)](Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/streamlit_real_time_interface.py) &nbsp; [![Article lié](https://img.shields.io/badge/Article_lié-000?logo=Medium)](https://medium.com/@antoninlefevre45/auto-encodeur-de-débruitage-pour-la-détection-danomalies-vibratoires-117d2ad3a94b) &nbsp; [![PyTorch](https://img.shields.io/badge/PyTorch-FFF?logo=pytorch)](https://) &nbsp;  [![Arduino](https://img.shields.io/badge/Arduino-FFF?logo=Arduino)](https://)
 
 
 <br>
