@@ -50,6 +50,9 @@ Pour faciliter la recherche en fonction de vos besoins, chaque projets est doté
 ### Détection d'anomalies vibratoires avec capteur accéléromètre et auto-encodeur de débruitage
 [![Code source](https://img.shields.io/badge/Code_source-000?logo=Visual+Studio+Code)](Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/streamlit_real_time_interface.py) &nbsp; [![Article lié](https://img.shields.io/badge/Article_lié-000?logo=Medium)](https://medium.com/@antoninlefevre45/auto-encodeur-de-débruitage-pour-la-détection-danomalies-vibratoires-117d2ad3a94b) &nbsp; [![PyTorch](https://img.shields.io/badge/PyTorch-FFF?logo=pytorch)](https://) &nbsp;  [![Arduino](https://img.shields.io/badge/Arduino-FFF?logo=Arduino)](https://)
 
+Ce projet vise à détecter les chocs en temps réel à l'aide d'un modèle d'autoencodeur de débruitage et d'un capteur d'accélération. 
+L'objectif est d'identifier les chocs parmi les données du capteur en éliminant le bruit et les variations normales d'accélération.
+Nous utiliserons le capteur MPU-6050 (GY-521) et un Arduino Uno pour collecter les données d'accélération.
 
 <br>
 
