@@ -16,7 +16,7 @@
  &nbsp;
  <a href="https://"><img src="https://img.shields.io/badge/PyTorch-FFF?logo=pytorch" alt="PyTorch"></a>
  &nbsp;
- <a href="https://"><img src="https://img.shields.io/badge/Sciait--learn-FFF?logo=scikitlearn" alt="Scikit-learn"></a>
+ <a href="https://"><img src="https://img.shields.io/badge/Scikit--learn-FFF?logo=scikitlearn" alt="Scikit-learn"></a>
 </p>
 
 <p align="center">
