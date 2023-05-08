@@ -65,9 +65,7 @@ streamlit run streamlit_real_time_interface.py
 ```
 
 <p align="center">
-  <br>
-  <img src="Projets/Station_meteo_prediction_temps_ML/preview.jpg" alt="preview projet anoamlies detection" width="1200">
-  <br>
+  <img src="Projets/Station_meteo_prediction_temps_ML/preview.jpg" alt="preview projet anoamlies detection">
 </p>
 
 
