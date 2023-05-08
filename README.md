@@ -66,7 +66,7 @@ streamlit run streamlit_real_time_interface.py
 
 **Aperçu**
 <p align="center">
-  <img src="Projets/Station_meteo_prediction_temps_ML/preview.jpg" alt="preview projet anoamlies detection" width="800">
+  <img src="Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/preview.jpg" alt="preview projet anoamlies detection" width="800">
 </p>
 
 
