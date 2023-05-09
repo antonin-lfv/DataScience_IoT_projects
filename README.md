@@ -19,6 +19,8 @@
  <a href="#"><img src="https://img.shields.io/badge/Scikit--learn-FFF?logo=scikitlearn" alt="Scikit-learn"></a>
 &nbsp;
  <a href="#"><img src="https://img.shields.io/badge/Streamlit-FFF?logo=streamlit" alt="Streamlit"></a>
+&nbsp;
+<a href="#"><img src="https://img.shields.io/badge/MQTT-FFF?logo=MQTT&logoColor=000" alt="MQTT"></a>
 
 </p>
 
@@ -63,7 +65,7 @@ Pour lancer l'interface, exécutez la commande suivante dans le dossier du proje
 ```bash
 streamlit run streamlit_real_time_interface.py
 ```
-
+ 
 **Aperçu**
 <p align="center">
   <img src="Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/preview.jpg" alt="preview projet anoamlies detection" width="800">
