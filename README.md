@@ -72,6 +72,13 @@ streamlit run streamlit_real_time_interface.py
 </p>
 
 
+### Station météo intelligente
+[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-FFF?logo=scikitlearn)]() &nbsp; [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]() &nbsp; [![MQTT](https://img.shields.io/badge/MQTT-FFF?logo=mqtt&logoColor=000)]() &nbsp; [![Raspberry Pi](https://img.shields.io/badge/RaspberryPi-FFF?logo=RaspberryPi&logoColor=C51A4A)]()
+
+Ce projet vise à développer une station météorologique connectée et intelligente. Elle sera équipée de divers capteurs : le DHT11 pour mesurer l'humidité, le BMP180 pour la température et la pression atmosphérique, et un capteur Grove pour évaluer la qualité de l'air. Les données collectées par ces capteurs seront transmises à un serveur via le protocole MQTT. Ce serveur, en plus d'afficher les informations reçues en utilisant Streamlit, se chargera également de stocker ces données dans une base de données et sera capable d'effectuer des prédictions sur les conditions météorologiques futures.
+
+
+
 <br>
 
 ---
