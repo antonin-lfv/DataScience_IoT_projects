@@ -71,6 +71,7 @@ streamlit run streamlit_real_time_interface.py
   <img src="Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/preview.jpg" alt="preview projet anoamlies detection" width="800">
 </p>
 
+<br>
 
 ### Station météo intelligente
 [![Scikit-learn](https://img.shields.io/badge/Scikit--learn-FFF?logo=scikitlearn)]() &nbsp; [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]() &nbsp; [![MQTT](https://img.shields.io/badge/MQTT-FFF?logo=mqtt&logoColor=000)]() &nbsp; [![Raspberry Pi](https://img.shields.io/badge/RaspberryPi-FFF?logo=RaspberryPi&logoColor=C51A4A)]()
