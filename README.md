@@ -79,6 +79,11 @@ streamlit run streamlit_real_time_interface.py
 Ce projet vise à développer une station météorologique connectée et intelligente. Elle sera équipée de divers capteurs : le DHT11 pour mesurer l'humidité, le BMP180 pour la température et la pression atmosphérique, et un capteur Grove pour évaluer la qualité de l'air. Les données collectées par ces capteurs seront transmises à un serveur via le protocole MQTT. Ce serveur, en plus d'afficher les informations reçues en utilisant Streamlit, se chargera également de stocker ces données dans une base de données et sera capable d'effectuer des prédictions sur les conditions météorologiques futures.
 
 
+### Création de carte de relief 3D
+[![Arduino](https://img.shields.io/badge/Arduino-FFF?logo=Arduino)]() &nbsp; [![Scikit-learn](https://img.shields.io/badge/Scikit--learn-FFF?logo=Scikit-learn)]() &nbsp;
+
+Ce projet vise à générer une représentation 3D précise d'un environnement en utilisant un capteur ultrasonique HC-SR04 monté sur un Arduino. Le capteur scanne l'environnement à intervalles réguliers, enregistrant les distances pour déduire la hauteur du relief. Ces mesures sont ensuite transmises à un ordinateur via le port série. Elles sont employées pour effectuer une interpolation tridimensionnelle avec Scikit-learn, créant une carte détaillée de l'espace. Le projet met en avant la capacité d'effectuer une cartographie 3D détaillée de petits environnements en utilisant des techniques d'apprentissage automatique et de traitement de données.
+
 
 <br>
 
