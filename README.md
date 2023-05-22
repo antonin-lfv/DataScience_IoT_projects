@@ -14,7 +14,7 @@
  &nbsp;
  <a href="#"><img src="https://img.shields.io/badge/Arduino-FFF?logo=arduino" alt="Arduino"></a>
  &nbsp;
- <a href="#"><img src="https://img.shields.io/badge/ESP32-FFF?logo=esphome" alt="ESP32"></a>
+ <a href="#"><img src="https://img.shields.io/badge/ESP32-000?logo=esphome" alt="ESP32"></a>
  &nbsp;
  <a href="#"><img src="https://img.shields.io/badge/PyTorch-FFF?logo=pytorch" alt="PyTorch"></a>
  &nbsp;
