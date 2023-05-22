@@ -76,9 +76,9 @@ streamlit run streamlit_real_time_interface.py
 <br>
 
 ### Station météo intelligente
-[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-FFF?logo=scikitlearn)]() &nbsp; [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]() &nbsp; [![MQTT](https://img.shields.io/badge/MQTT-FFF?logo=mqtt&logoColor=000)]() &nbsp; [![ESP32](https://img.shields.io/badge/ESP32-FFF?logo=esphome&logoColor=000)]()
+[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-FFF?logo=scikitlearn)]() &nbsp; [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]() &nbsp; [![MQTT](https://img.shields.io/badge/MQTT-FFF?logo=mqtt&logoColor=000)]() &nbsp; [![ESP32](https://img.shields.io/badge/ESP32-FFF?logo=esphome&logoColor=000)]() &nbsp; [![Raspberry pi](https://img.shields.io/badge/ESP32-FFF?logo=raspberry+pi)]()
 
-Ce projet vise à développer une station météorologique connectée et intelligente. Elle sera équipée de divers capteurs : le DHT11 pour mesurer l'humidité, le BMP180 pour la température et la pression atmosphérique, et un capteur Grove pour évaluer la qualité de l'air. Les données collectées par ces capteurs seront transmises à un serveur via le protocole MQTT. Ce serveur, en plus d'afficher les informations reçues en utilisant Streamlit, se chargera également de stocker ces données dans une base de données et sera capable d'effectuer des prédictions sur les conditions météorologiques futures.
+Ce projet vise à développer une station météorologique connectée et intelligente. Elle sera équipée de divers capteurs : le DHT11 pour mesurer l'humidité, le BMP180 pour la température et la pression atmosphérique, et un capteur Grove pour évaluer la qualité de l'air. Les données collectées par ces capteurs seront transmises grâce à un ESP32, à un serveur sur raspberry pi via le protocole MQTT. Ce serveur, en plus d'afficher les informations reçues en utilisant Streamlit, se chargera également de stocker ces données dans une base de données et sera capable d'effectuer des prédictions sur les conditions météorologiques futures.
 
 <br>
 
