@@ -9,7 +9,8 @@ import plotly.graph_objects as go
 
 from utils import sidebar_bg
 
-# streamlit run Projets/Station_meteo_prediction_temps_ML/streamlit_app.py
+# streamlit run streamlit_app.py
+# Pour acceder au dashboard depuis un autre appareil sur le meme reseau local: http://192.168.1.37:8501
 
 # ====== Database connection ====== #
 conn = sqlite3.connect('sensors_data.db')
