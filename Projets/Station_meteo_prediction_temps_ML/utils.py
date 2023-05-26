@@ -1,6 +1,16 @@
 import streamlit as st
 import base64
 
+
+def interpret_air_quality(value):
+    if value < 100:
+        return "Fresh Air"
+    elif value < 200:
+        return "Low Pollution"
+    else:
+        return "High Pollution"
+
+
 def sidebar_bg(side_bg):
     side_bg_ext = 'png'
 

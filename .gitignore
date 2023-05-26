@@ -162,6 +162,9 @@ cython_debug/
 /capteurs.md
 /I2C_test.cpp
 /Projets/Station_meteo_prediction_temps_ML/sensors_data.db
-/Projets/Station_meteo_prediction_temps_ML/test_mqtt.py
+/Projets/Station_meteo_prediction_temps_ML/data_managing.py
 /Projets/Station_meteo_prediction_temps_ML/.benchmarks/
 /Projets/projet_/
+/Projets/Station_meteo_prediction_temps_ML/config.json
+/Projets/Station_meteo_prediction_temps_ML/weather_data.db
+streamlit_change_background.py
