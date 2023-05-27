@@ -14,6 +14,8 @@ from utils import sidebar_bg, interpret_air_quality
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
+color_mean = "#85c7ff"
+
 
 # streamlit run streamlit_app.py
 # Pour acceder au dashboard depuis un autre appareil sur le meme reseau local: http://192.168.1.37:8501
@@ -34,7 +36,7 @@ def connect_db_and_fetch_data():
     three_days_ago_str = three_days_ago.strftime('%Y-%m-%dT%H:%M:%S')
     one_day_ago_str = one_day_ago.strftime('%Y-%m-%dT%H:%M:%S')
     # Execute SQL to get all records from the last day
-    c.execute("SELECT * FROM weather_data WHERE timestamp >= ?", (one_day_ago_str,))
+    c.execute("SELECT timestamp, air_quality FROM weather_data WHERE timestamp >= ?", (one_day_ago_str,))
     # Fetch all the rows as a list of tuples
     data = c.fetchall()
     # Transpose rows to columns
@@ -44,7 +46,7 @@ def connect_db_and_fetch_data():
     air_quality_list = list(columns[1])
     # continue for other columns...
     # Execute SQL to get temperature records from the last 3 days
-    # c.execute("SELECT timestamp, temperature FROM weather_data WHERE timestamp >= ?", (three_days_ago_str,))
+    # c.execute("SELECT timestamp, temperature, pressure, humidity FROM weather_data WHERE timestamp >= ?", (three_days_ago_str,))
     # Fetch all the rows as a list of tuples
     # data = c.fetchall()
     # Transpose rows to columns
@@ -66,8 +68,6 @@ temperature_container = st.container()
 pressure_container, humidity_container, air_quality_container = st.columns(3)
 # == Sidebar layout
 locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
-date_actuelle = time.strftime("%d %B %Y")
-heure_actuelle = time.strftime("%H:%M")
 relative_path_side_bg = 'clouds.png'
 side_bg = os.path.join(script_dir, relative_path_side_bg)
 sidebar_bg(side_bg)
@@ -81,10 +81,18 @@ with temperature_container.expander("TEMPÉRATURE (°C)", expanded=True):
     with temperature_semaine:
         figure_temperature_semaine = st.empty()
 with pressure_container.expander("PRESSION (hPa)", expanded=True):
-    figure_pressure = st.empty()
+    pressure_now, pressure_last_3_days = st.tabs(["Maintenant", "Ces 3 derniers jours"])
+    with pressure_now:
+        figure_pressure_now = st.empty()
+    with pressure_last_3_days:
+        figure_pressure_last_3_days = st.empty()
 with humidity_container.expander("HUMIDITÉ (%)", expanded=True):
-    figure_humidity = st.empty()
-with air_quality_container.expander("QUALITÉ DE L'AIR", expanded=True):
+    humidity_now, humidity_last_3_days = st.tabs(["Maintenant", "Ces 3 derniers jours"])
+    with humidity_now:
+        figure_humidity_now = st.empty()
+    with humidity_last_3_days:
+        figure_humidity_last_3_days = st.empty()
+with air_quality_container.expander("QUALITÉ DE L'AIR AUJOURD'HUI", expanded=True):
     figure_air_quality = st.empty()
 
 # Préparation du CSS
@@ -134,13 +142,16 @@ def card(date, heure, temperature, pressure, humidity, air_quality):
 
 # ====== Serial ====== #
 while True:
+    date_actuelle = time.strftime("%d %B %Y")
+    heure_actuelle = time.strftime("%H:%M")
+
     timestamps, air_quality = connect_db_and_fetch_data()
     fake_temperature_one_day = [random.randint(0, 30) for _ in range(0, len(timestamps))]
-    fake_pressure = [random.randint(990, 1018) for _ in range(0, len(timestamps))]
-    fake_humidity = [random.randint(0, 100) for _ in range(0, len(timestamps))]
 
     fake_temperature_three_days = [random.randint(0, 30) for _ in range(0, 3 * len(timestamps))]
     fake_timestamps_three_days = [i for i in range(1, 3 * len(timestamps) + 1)]
+    fake_pressure = [random.randint(990, 1018) for _ in range(0, 3*len(timestamps))]
+    fake_humidity = [random.randint(0, 100) for _ in range(0, 3*len(timestamps))]
 
     # == Sidebar
     card_sidebar.markdown(card(date_actuelle, heure_actuelle, fake_temperature_one_day[-1],
@@ -156,10 +167,10 @@ while True:
                 y=air_quality,
                 mode='lines',
                 name='Air quality',
-                line=dict(color='rgb(0, 0, 0)', width=2)
+                line=dict(color='rgb(0, 0, 0)', width=1)
             ),
             layout=go.Layout(
-                title="Aujourd'hui",
+                # title="Aujourd'hui",
                 xaxis=dict(title='Date'),
                 yaxis=dict(title='Air quality', range=[0, max_air_quality]),
                 template='plotly_white',
@@ -168,13 +179,14 @@ while True:
                         type="line",
                         xref="paper", yref="y",
                         x0=0, y0=100, x1=1, y1=100,
-                        line=dict(color="Orange", width=2)
+                        line=dict(color='green',
+                                  width=1)
                     ),
                     dict(
                         type="line",
                         xref="paper", yref="y",
                         x0=0, y0=200, x1=1, y1=200,
-                        line=dict(color="Red", width=2)
+                        line=dict(color="orange", width=2)
                     )
                 ]
             )
@@ -194,35 +206,39 @@ while True:
                     y=fake_temperature_one_day,
                     mode='lines',
                     name='Temperature',
-                    line=dict(color='rgb(0, 0, 0)', width=2)
-                ),
-                # Ajout d'une ligne horizontale pour la moyenne
-                go.Scatter(
-                    x=timestamps,
-                    y=[average_temperature_one_day] * len(timestamps),
-                    mode='lines',
-                    name='Moyenne',
-                    line=dict(color='rgb(255, 0, 0)', width=2, dash='dash')
+                    line=dict(color='rgb(0, 0, 0)', width=1)
                 )
             ],
             layout=go.Layout(
-                title="Température",
                 xaxis=dict(title='Date'),
                 yaxis=dict(title='Temperature', range=[0, max_temperature_one_day]),
                 template='plotly_white',
-                # Ajout d'une annotation pour la moyenne
+                shapes=[
+                    # Ajout de la ligne horizontale de la moyenne
+                    dict(
+                        type='line',
+                        yref='y', y0=average_temperature_one_day, y1=average_temperature_one_day,
+                        xref='paper', x0=0, x1=1,
+                        line=dict(
+                            color=color_mean,
+                            width=1,
+                            dash="dash",
+                        )
+                    )
+                ],
                 annotations=[
-                    go.layout.Annotation(
-                        x=timestamps[0],
-                        y=average_temperature_one_day,
-                        xref="x",
-                        yref="y",
-                        text=f"Moyenne: {average_temperature_one_day:.2f}",
+                    # Ajout de l'annotation de la valeur moyenne
+                    dict(
+                        xref='paper', x=0.05,
+                        yref='y', y=average_temperature_one_day,
+                        text=f'Moyenne: {average_temperature_one_day:.2f}°C',
                         showarrow=False,
                         font=dict(
-                            size=12
+                            size=12,
+                            color="Black"
                         ),
-                        bgcolor="rgba(255, 255, 255, 0.9)"
+                        bgcolor=color_mean,
+                        opacity=0.9
                     )
                 ]
             )
@@ -242,43 +258,47 @@ while True:
                     y=fake_temperature_three_days,
                     mode='lines',
                     name='Temperature',
-                    line=dict(color='rgb(0, 0, 0)', width=2)
-                ),
-                # Ajout d'une ligne horizontale pour la moyenne
-                go.Scatter(
-                    x=fake_timestamps_three_days,
-                    y=[average_temperature_three_days] * len(fake_timestamps_three_days),
-                    mode='lines',
-                    name='Average',
-                    line=dict(color='rgb(255, 0, 0)', width=2, dash='dash')
+                    line=dict(color='rgb(0, 0, 0)', width=1)
                 )
             ],
             layout=go.Layout(
-                title="Température",
                 xaxis=dict(title='Date'),
                 yaxis=dict(title='Temperature', range=[0, max_temperature_three_days]),
                 template='plotly_white',
-                # Ajout d'une annotation pour la moyenne
+                shapes=[
+                    # Ajout de la ligne horizontale de la moyenne
+                    dict(
+                        type='line',
+                        yref='y', y0=average_temperature_three_days, y1=average_temperature_three_days,
+                        xref='paper', x0=0, x1=1,
+                        line=dict(
+                            color=color_mean,
+                            width=1,
+                            dash="dash",
+                        )
+                    )
+                ],
                 annotations=[
-                    go.layout.Annotation(
-                        x=fake_timestamps_three_days[0],
-                        y=average_temperature_three_days,
-                        xref="x",
-                        yref="y",
-                        text=f"Moyenne: {average_temperature_three_days:.2f}",
+                    # Ajout de l'annotation de la valeur moyenne
+                    dict(
+                        xref='paper', x=0.05,
+                        yref='y', y=average_temperature_three_days,
+                        text=f'Moyenne: {average_temperature_three_days:.2f}°C',
                         showarrow=False,
                         font=dict(
-                            size=12
+                            size=12,
+                            color="Black"
                         ),
-                        bgcolor="rgba(255, 255, 255, 0.9)"
+                        bgcolor=color_mean,
+                        opacity=0.9
                     )
                 ]
             )
         ), use_container_width=True
     )
 
-    # == Pressure
-    figure_pressure.plotly_chart(go.Figure(go.Indicator(
+    # == Pressure Now
+    figure_pressure_now.plotly_chart(go.Figure(go.Indicator(
         mode="gauge+number",
         value=fake_pressure[-1],
         domain={'x': [0, 1], 'y': [0, 1]},
@@ -287,8 +307,8 @@ while True:
             'axis': {'range': [1013.25 - 30, 1013.25 + 30]},  # Ajuster la plage en fonction de vos données
             'bar': {'color': "black"},  # Couleur de la barre/jauge
             'steps': [
-                {'range': [0, 1013.25], 'color': 'blue'},  # couleur pour "dépression"
-                {'range': [1013.25, 1100], 'color': 'red'}  # couleur pour "anticyclone"
+                {'range': [0, 1013.25], 'color': 'lightblue'},  # couleur pour "dépression"
+                {'range': [1013.25, 1100], 'color': 'salmon'}  # couleur pour "anticyclone"
             ],
             'threshold': {
                 'line': {'color': "black", 'width': 4},
@@ -298,8 +318,59 @@ while True:
         }
     )), use_container_width=True)
 
-    # == Humidity
-    figure_humidity.plotly_chart(go.Figure(go.Indicator(
+    # == Pressure last 3 days
+    # Calcul de la moyenne
+    avg_pressure = sum(fake_pressure) / len(fake_pressure)
+
+    figure_pressure_last_3_days.plotly_chart(
+        go.Figure(
+            data=[
+                go.Scatter(
+                    x=fake_timestamps_three_days,
+                    y=fake_pressure,
+                    mode='lines',
+                    name='Pression',
+                    line=dict(color='rgb(0, 0, 0)', width=1)
+                )
+            ],
+            layout=go.Layout(
+                xaxis=dict(title='Date'),
+                yaxis=dict(title='Pression', range=[min(fake_pressure), max(fake_pressure)]),
+                template='plotly_white',
+                shapes=[
+                    # Ajout de la ligne horizontale
+                    dict(
+                        type='line',
+                        yref='y', y0=avg_pressure, y1=avg_pressure,
+                        xref='paper', x0=0, x1=1,
+                        line=dict(
+                            color=color_mean,
+                            width=1,
+                            dash="dash",
+                        )
+                    )
+                ],
+                annotations=[
+                    # Ajout de l'annotation de la valeur moyenne
+                    dict(
+                        xref='paper', x=0.05,
+                        yref='y', y=avg_pressure,
+                        text=f'Moyenne: {avg_pressure:.2f} hPa',
+                        showarrow=False,
+                        font=dict(
+                            size=12,
+                            color="Black"
+                        ),
+                        bgcolor=color_mean,
+                        opacity=0.9
+                    )
+                ]
+            )
+        ), use_container_width=True
+    )
+
+    # == Humidity Now
+    figure_humidity_now.plotly_chart(go.Figure(go.Indicator(
         mode="gauge+number",
         value=fake_humidity[-1],
         domain={'x': [0, 1], 'y': [0, 1]},
@@ -308,9 +379,9 @@ while True:
             'axis': {'range': [0, 100]},  # Ajuster la plage en fonction de vos données
             'bar': {'color': "black"},  # Couleur de la barre/jauge
             'steps': [
-                {'range': [0, 30], 'color': 'blue'},
-                {'range': [30, 70], 'color': 'green'},
-                {'range': [70, 100], 'color': 'red'}
+                {'range': [0, 40], 'color': 'lightblue'},
+                {'range': [40, 70], 'color': 'lightgreen'},
+                {'range': [70, 100], 'color': 'salmon'}
             ],
             'threshold': {
                 'line': {'color': "black", 'width': 4},
@@ -319,5 +390,56 @@ while True:
             }
         }
     )), use_container_width=True)
+
+    # == Humidity last 3 days
+    # Calcul de la moyenne
+    avg_humidity = sum(fake_humidity) / len(fake_humidity)
+
+    figure_humidity_last_3_days.plotly_chart(
+        go.Figure(
+            data=[
+                go.Scatter(
+                    x=fake_timestamps_three_days,
+                    y=fake_humidity,
+                    mode='lines',
+                    name='Humidité',
+                    line=dict(color='rgb(0, 0, 0)', width=1)
+                )
+            ],
+            layout=go.Layout(
+                xaxis=dict(title='Date'),
+                yaxis=dict(title='Humidité', range=[min(fake_humidity), max(fake_humidity)]),
+                template='plotly_white',
+                shapes=[
+                    # Ajout de la ligne horizontale
+                    dict(
+                        type='line',
+                        yref='y', y0=avg_humidity, y1=avg_humidity,
+                        xref='paper', x0=0, x1=1,
+                        line=dict(
+                            color=color_mean,
+                            width=1,
+                            dash="dash",
+                        )
+                    )
+                ],
+                annotations=[
+                    # Ajout de l'annotation de la valeur moyenne
+                    dict(
+                        xref='paper', x=0.05,
+                        yref='y', y=avg_humidity,
+                        text=f'Moyenne: {avg_humidity:.2f} %',
+                        showarrow=False,
+                        font=dict(
+                            size=12,
+                            color="Black"
+                        ),
+                        bgcolor=color_mean,
+                        opacity=0.9
+                    )
+                ]
+            )
+        ), use_container_width=True
+    )
 
     time.sleep(5)

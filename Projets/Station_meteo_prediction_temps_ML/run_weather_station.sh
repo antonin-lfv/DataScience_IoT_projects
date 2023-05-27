@@ -10,4 +10,4 @@ osascript -e 'tell application "Terminal" to do script "/opt/homebrew/Cellar/mos
 osascript -e 'tell application "Terminal" to do script "python3 '"$DIR"'/data_managing.py"'
 
 # Ouvre une nouvelle fenêtre de terminal et exécute l'application Streamlit
-osascript -e 'tell application "Terminal" to do script "streamlit run '"$DIR"'/streamlit_app.py"'
+osascript -e 'tell application "Terminal" to do script "streamlit run '"$DIR"'/streamlit_app.py --theme.primaryColor \"#85c7ff\" --theme.base \"light\" --theme.backgroundColor \"#fcffff\" --theme.secondaryBackgroundColor \"#74b8ce\" --theme.textColor \"#545454\""'
