@@ -3,6 +3,7 @@
 #include <ArduinoJson.h>
 #include <Wire.h>
 #include <RtcDS1302.h>   // Incluez la bibliothèque RtcDS1302
+#include <DHT.h>
 
 // Remplacez par vos identifiants réseau
 const char* ssid = "SFR_323F";
@@ -17,6 +18,15 @@ const char* mqtt_server = "192.168.1.37";
 #define CLK_PIN  27
 #define DAT_PIN  26
 #define RST_PIN  25
+
+// Définir la broche du capteur DHT11
+#define DHTPIN 32
+
+// Définir le type de capteur DHT
+#define DHTTYPE DHT11
+
+// Initialiser le capteur DHT
+DHT dht(DHTPIN, DHTTYPE);
 
 // Créez un objet ThreeWire de manière persistante
 ThreeWire myWire = ThreeWire(DAT_PIN, CLK_PIN, RST_PIN);
@@ -67,6 +77,9 @@ void setup() {
   setup_wifi();
   client.setServer(mqtt_server, 1883);
 
+  // Initialize DHT
+  dht.begin();
+
   // Initialize RTC
   Rtc.Begin();
 
@@ -115,12 +128,18 @@ void loop() {
   // Lecture de la qualité de l'air
   int air_quality = analogRead(AIR_QUALITY_SENSOR_PIN);
 
+  // Lecture des valeurs du capteur DHT11
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
+
   // Lecture de la date et l'heure du DS1302
   RtcDateTime now = Rtc.GetDateTime();
 
   // Création du JSON
   StaticJsonDocument<300> doc;
   doc["air_quality"] = air_quality;
+  doc["temperature"] = temperature;
+  doc["humidity"] = humidity;
   char timestamp[20];
   sprintf(timestamp, "%04d-%02d-%02dT%02d:%02d:%02d", now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second());
   doc["time"] = timestamp;
@@ -131,5 +150,5 @@ void loop() {
   // Publication sur le topic "weather station"
   client.publish("weather station", jsonBuffer);
 
-  delay(10000);  // Attente de 10 secondes
+  delay(600000);  // Attente de 10 minutes
 }

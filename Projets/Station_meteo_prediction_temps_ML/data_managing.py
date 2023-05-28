@@ -19,7 +19,7 @@ c = conn.cursor()
 # Créez la table si elle n'existe pas déjà
 c.execute('''
     CREATE TABLE IF NOT EXISTS weather_data
-    (timestamp TEXT, air_quality INTEGER)
+    (timestamp TEXT, air_quality INTEGER, temperature REAL, humidity REAL)
 ''')
 
 
@@ -41,8 +41,8 @@ def on_message(client, userdata, msg):
     data = json.loads(msg.payload.decode('utf-8'))
 
     # Enregistrez les données dans la base de données
-    c.execute("INSERT INTO weather_data VALUES (?, ?)",
-              (data['time'], data['air_quality'])
+    c.execute("INSERT INTO weather_data VALUES (?, ?, ?, ?)",
+              (data['time'], data['air_quality'], data['temperature'], data['humidity'])
               )
     conn.commit()
 
