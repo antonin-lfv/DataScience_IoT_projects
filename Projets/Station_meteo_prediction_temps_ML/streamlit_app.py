@@ -137,15 +137,15 @@ def card(date, heure, temperature, pressure, humidity, air_quality, altitude):
         <br>
         <div class="info-card" style="text-align: center;">
             <p>Température<p>
-            <h2>{round(temperature, 1)}°C</h2>
+            <h2>{round(temperature, 1) if temperature is not None else 'N/A'}°C</h2>
             <p>Altitude<p>
-            <h2>{round(altitude, 1)}m</h2>
+            <h2>{round(altitude, 1) if altitude is not None else 'N/A'}m</h2>
             <p>Pression<p>
-            <h2>{pa_to_hpa(pressure)}hPa</h2>
+            <h2>{pa_to_hpa(pressure) if pressure is not None else 'N/A'}hPa</h2>
             <p>Humidité<p>
-            <h2>{round(humidity,2)}%</h2>
+            <h2>{round(humidity,2) if humidity is not None else 'N/A'}%</h2>
             <p>Qualité de l'air<p>
-            <h2>{interpret_air_quality(air_quality)} ({air_quality})</h2>
+            <h2>{interpret_air_quality(air_quality) if air_quality is not None else 'N/A'} ({air_quality if air_quality is not None else 'N/A'})</h2>
         </div>
     """
     return card
@@ -166,6 +166,8 @@ while True:
         humidity_list_three_days, pressure_list_three_days = connect_db_and_fetch_data()
     if timestamp_list_one_day is None:
         warning_message.warning("La base de données est vide, veuillez patienter le temps de recevoir des données.")
+        card_sidebar.markdown(card(date_actuelle, heure_actuelle, None, None, None, None, None),
+                              unsafe_allow_html=True)
         time.sleep(5)
     else:
         # == Sidebar
