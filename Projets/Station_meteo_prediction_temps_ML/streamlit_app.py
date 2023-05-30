@@ -32,13 +32,14 @@ def connect_db_and_fetch_data():
     three_days_ago_str = three_days_ago.strftime('%Y-%m-%dT%H:%M:%S')
     one_day_ago_str = one_day_ago.strftime('%Y-%m-%dT%H:%M:%S')
     # Execute SQL to get all records from the last day
-    c.execute("SELECT timestamp, air_quality, temperature, humidity FROM weather_data WHERE timestamp >= ?",
-              (one_day_ago_str,))
+    c.execute("SELECT timestamp, air_quality, temperature, humidity, altitude "
+              "FROM weather_data "
+              "WHERE timestamp >= ?", (one_day_ago_str,))
     # Fetch all the rows as a list of tuples
     data = c.fetchall()
     # if the data is empty, return empty lists
     if len(data) == 0:
-        return None, None, None, None, None, None, None
+        return None, None, None, None, None, None, None, None, None
     # Transpose rows to columns
     columns = list(zip(*data))
     # Each column is now a separate list, e.g.
@@ -46,9 +47,10 @@ def connect_db_and_fetch_data():
     air_quality_list_one_day = list(columns[1])
     temperature_list_one_day = list(columns[2])
     humidity_list_one_day = list(columns[3])
-    # continue for other columns...
+    altitude_list_one_day = list(columns[4])
     # Execute SQL to get temperature, humidity, pressure records from the last 3 days
-    c.execute("SELECT timestamp, temperature, humidity FROM weather_data WHERE timestamp >= ?", (three_days_ago_str,))
+    c.execute("SELECT timestamp, temperature, humidity, pressure FROM weather_data WHERE timestamp >= ?",
+              (three_days_ago_str,))
     # Fetch all the rows as a list of tuples
     data = c.fetchall()
     # Transpose rows to columns
@@ -57,11 +59,12 @@ def connect_db_and_fetch_data():
     timestamp_list_three_days = list(columns[0])
     temperature_list_three_days = list(columns[1])
     humidity_list_three_days = list(columns[2])
-    # pressure_list_three_days = list(columns[3])
+    pressure_list_three_days = list(columns[3])
     # Remember to close the connection when done
     conn.close()
     return timestamp_list_one_day, air_quality_list_one_day, temperature_list_one_day, humidity_list_one_day, \
-        timestamp_list_three_days, temperature_list_three_days, humidity_list_three_days
+        altitude_list_one_day, timestamp_list_three_days, temperature_list_three_days, \
+        humidity_list_three_days, pressure_list_three_days
 
 
 # ====== Streamlit ====== #
@@ -126,7 +129,7 @@ st.sidebar.markdown(css, unsafe_allow_html=True)
 
 
 # Création de la carte
-def card(date, heure, temperature, pressure, humidity, air_quality):
+def card(date, heure, temperature, pressure, humidity, air_quality, altitude):
     card = f"""
         <div class="info-card" style="text-align: center;">
             <h2>{date} - {heure}</h2>
@@ -135,15 +138,22 @@ def card(date, heure, temperature, pressure, humidity, air_quality):
         <div class="info-card" style="text-align: center;">
             <p>Température<p>
             <h2>{round(temperature, 1)}°C</h2>
+            <p>Altitude<p>
+            <h2>{round(altitude, 1)}m</h2>
             <p>Pression<p>
-            <h2>{pressure}hPa</h2>
+            <h2>{pa_to_hpa(pressure)}hPa</h2>
             <p>Humidité<p>
-            <h2>{humidity}%</h2>
+            <h2>{round(humidity,2)}%</h2>
             <p>Qualité de l'air<p>
             <h2>{interpret_air_quality(air_quality)} ({air_quality})</h2>
         </div>
     """
     return card
+
+
+def pa_to_hpa(pressure_pa):
+    pressure_hpa = pressure_pa / 100.0
+    return round(pressure_hpa, 1)
 
 
 # ====== Serial ====== #
@@ -152,17 +162,16 @@ while True:
     heure_actuelle = time.strftime("%H:%M")
 
     timestamp_list_one_day, air_quality_list_one_day, temperature_list_one_day, humidity_list_one_day, \
-        timestamp_list_three_days, temperature_list_three_days, humidity_list_three_days = connect_db_and_fetch_data()
+        altitude_list_one_day, timestamp_list_three_days, temperature_list_three_days, \
+        humidity_list_three_days, pressure_list_three_days = connect_db_and_fetch_data()
     if timestamp_list_one_day is None:
         warning_message.warning("La base de données est vide, veuillez patienter le temps de recevoir des données.")
         time.sleep(5)
     else:
-        fake_pressure_3_days = [random.randint(990, 1018) for _ in range(0, len(timestamp_list_three_days))]
-
         # == Sidebar
         card_sidebar.markdown(card(date_actuelle, heure_actuelle, temperature_list_one_day[-1],
-                                   fake_pressure_3_days[-1], humidity_list_three_days[-1],
-                                   air_quality_list_one_day[-1]),
+                                   pressure_list_three_days[-1], humidity_list_three_days[-1],
+                                   air_quality_list_one_day[-1], altitude_list_one_day[-1]),
                               unsafe_allow_html=True)
 
         # == Air quality
@@ -170,7 +179,7 @@ while True:
         max_air_quality = [x for x in air_quality_list_one_day if x is not None]
         # Calculer le max seulement si la liste filtrée n'est pas vide
         if max_air_quality:
-            max_air_quality = max(max(max_air_quality)+1, 100)
+            max_air_quality = max(max(max_air_quality) + 1, 100)
         else:
             max_air_quality = 100
         figure_air_quality.plotly_chart(
@@ -209,8 +218,8 @@ while True:
         # == Temperature one day
         filtered_list = [x for x in temperature_list_one_day if x is not None]
         if filtered_list:
-            max_temperature_one_day = max(max(filtered_list)+1, 25)
-            min_temperature_one_day = min(min(filtered_list)-1, 20)
+            max_temperature_one_day = max(max(filtered_list) + 1, 25)
+            min_temperature_one_day = min(min(filtered_list) - 1, 20)
             average_temperature_one_day = sum(filtered_list) / len(filtered_list)
         else:
             max_temperature_one_day = 25
@@ -267,8 +276,8 @@ while True:
         # == Temperature three days
         filtered_list = [x for x in temperature_list_three_days if x is not None]
         if filtered_list:
-            max_temperature_three_days = max(max(filtered_list)+1, 25)
-            min_temperature_three_days = min(min(filtered_list)-1, 20)
+            max_temperature_three_days = max(max(filtered_list) + 1, 25)
+            min_temperature_three_days = min(min(filtered_list) - 1, 20)
             average_temperature_three_days = sum(filtered_list) / len(filtered_list)
         else:
             max_temperature_three_days = 25
@@ -325,7 +334,7 @@ while True:
         # == Pressure Now
         figure_pressure_now.plotly_chart(go.Figure(go.Indicator(
             mode="gauge+number",
-            value=fake_pressure_3_days[-1],
+            value=pa_to_hpa(pressure_list_three_days[-1]),
             domain={'x': [0, 1], 'y': [0, 1]},
             title={'text': "Pression"},
             gauge={
@@ -338,14 +347,14 @@ while True:
                 'threshold': {
                     'line': {'color': "black", 'width': 4},
                     'thickness': 0.75,
-                    'value': fake_pressure_3_days[-1]
+                    'value': pressure_list_three_days[-1]
                 }
             }
         )), use_container_width=True)
 
         # == Pressure last 3 days
         # Calcul de la moyenne
-        filtered_list = [x for x in fake_pressure_3_days if x is not None]
+        filtered_list = [x for x in pressure_list_three_days if x is not None]
         if filtered_list:
             avg_pressure = sum(filtered_list) / len(filtered_list)
         else:
@@ -356,7 +365,7 @@ while True:
                 data=[
                     go.Scatter(
                         x=timestamp_list_three_days,
-                        y=fake_pressure_3_days,
+                        y=pressure_list_three_days,
                         mode='lines',
                         name='Pression',
                         line=dict(color='rgb(0, 0, 0)', width=1)
@@ -364,7 +373,7 @@ while True:
                 ],
                 layout=go.Layout(
                     xaxis=dict(title='Date'),
-                    yaxis=dict(title='Pression', range=[min(fake_pressure_3_days), max(fake_pressure_3_days)]),
+                    yaxis=dict(title='Pression', range=[min(pressure_list_three_days), max(pressure_list_three_days)]),
                     template='plotly_white',
                     shapes=[
                         # Ajout de la ligne horizontale
@@ -424,8 +433,8 @@ while True:
         # Calcul de la moyenne
         filtered_list = [x for x in humidity_list_three_days if x is not None]
         if filtered_list:
-            min_humidity_three_days = min(filtered_list)+1
-            max_humidity_three_days = max(filtered_list)-1
+            min_humidity_three_days = min(filtered_list) + 1
+            max_humidity_three_days = max(filtered_list) - 1
             avg_humidity = sum(filtered_list) / len(filtered_list)
         else:
             min_humidity_three_days = 0

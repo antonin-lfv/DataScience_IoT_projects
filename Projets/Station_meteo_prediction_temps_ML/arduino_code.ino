@@ -4,13 +4,14 @@
 #include <Wire.h>
 #include <RtcDS1302.h>   // Incluez la bibliothèque RtcDS1302
 #include <DHT.h>
+#include <Adafruit_BMP085.h>
 
 // Remplacez par vos identifiants réseau
-const char* ssid = "SFR_323F";
-const char* password = "4f55kgmqtw3v6ahn5azy";
+const char* ssid = "you_ssid";
+const char* password = "your_password
 
 // Remplacez par l'adresse de votre serveur MQTT
-const char* mqtt_server = "192.168.1.37";
+const char* mqtt_server = "your_mqtt_server_IP";
 
 #define AIR_QUALITY_SENSOR_PIN 35  // Connectez votre capteur Grove à cette broche
 
@@ -27,6 +28,9 @@ const char* mqtt_server = "192.168.1.37";
 
 // Initialiser le capteur DHT
 DHT dht(DHTPIN, DHTTYPE);
+
+// Capteur BMP180
+Adafruit_BMP085 bmp;
 
 // Créez un objet ThreeWire de manière persistante
 ThreeWire myWire = ThreeWire(DAT_PIN, CLK_PIN, RST_PIN);
@@ -80,6 +84,11 @@ void setup() {
   // Initialize DHT
   dht.begin();
 
+  // Initialize BMP180
+  if (!bmp.begin()) {
+    Serial.println("Could not find a valid BMP180 sensor, check wiring!");
+  }
+
   // Initialize RTC
   Rtc.Begin();
 
@@ -132,6 +141,10 @@ void loop() {
   float humidity = dht.readHumidity();
   float temperature = dht.readTemperature();
 
+  // Lecture capteur BMP180
+  float pressure = bmp.readPressure();  // pression en Pa
+  float altitude = bmp.readAltitude();  // Altitude en metre
+
   // Lecture de la date et l'heure du DS1302
   RtcDateTime now = Rtc.GetDateTime();
 
@@ -140,6 +153,8 @@ void loop() {
   doc["air_quality"] = air_quality;
   doc["temperature"] = temperature;
   doc["humidity"] = humidity;
+  doc["pressure"] = pressure;
+  doc["altitude"] = altitude;
   char timestamp[20];
   sprintf(timestamp, "%04d-%02d-%02dT%02d:%02d:%02d", now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second());
   doc["time"] = timestamp;
