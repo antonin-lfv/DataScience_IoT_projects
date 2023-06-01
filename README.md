@@ -100,7 +100,6 @@ Pour lancer l'interface, exécutez la commande suivante dans le dossier du proje
 
 Ce projet vise à générer une représentation 3D précise d'un environnement en utilisant un capteur ultrasonique HC-SR04 monté sur un Arduino. Le capteur scanne l'environnement à intervalles réguliers, enregistrant les distances pour déduire la hauteur du relief. Ces mesures sont ensuite transmises à un ordinateur via le port série. Elles sont employées pour effectuer une interpolation tridimensionnelle avec Scikit-learn, créant une carte détaillée de l'espace. Le projet met en avant la capacité d'effectuer une cartographie 3D détaillée de petits environnements en utilisant des techniques d'apprentissage automatique et de traitement de données.
 
-
 <br>
 
 ---
