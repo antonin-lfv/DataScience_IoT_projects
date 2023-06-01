@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Run this file from the directory where it is located (Projets/Station_meteo_prediction_temps_ML)
+
 # Chemin vers le répertoire courant
 DIR="$PWD"
 

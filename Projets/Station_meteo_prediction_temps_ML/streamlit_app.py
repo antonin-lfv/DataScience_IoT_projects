@@ -1,20 +1,21 @@
 import locale
 import datetime
 import os
-
 import time
-import random
 
 import streamlit as st
 import sqlite3
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
+import pandas as pd
+from statsmodels.tsa.api import VAR
 
 from utils import sidebar_bg, interpret_air_quality
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
 color_mean = "#85c7ff"
+time_step = 5  # secondes
 
 
 # ==== Functions ==== #
@@ -152,8 +153,31 @@ def card(date, heure, temperature, pressure, humidity, air_quality, altitude):
 
 
 def pa_to_hpa(pressure_pa):
+    if pressure_pa is None:
+        return None
     pressure_hpa = pressure_pa / 100.0
     return round(pressure_hpa, 1)
+
+
+def process_values(timestamps, values):
+    """
+    Coupe les courbes lorsque le temps entre deux points est supérieur à la fréquence d'échantillonnage
+    :param timestamps: liste des timestamps
+    :param values: liste des valeurs
+    :return: liste des valeurs avec des None entre les valeurs manquantes
+    """
+    new_values = [values[0]]  # insérer la première valeur
+
+    # Convertir les timestamps en objets datetime
+    datetime_objects = [datetime.strptime(ts, "%Y-%m-%dT%H:%M:%S") for ts in timestamps]
+
+    for i in range(1, len(datetime_objects)):
+        if (datetime_objects[i] - datetime_objects[i-1]).total_seconds() > 2*time_step:
+            new_values.append(None)
+        else:
+            new_values.append(values[i])
+
+    return new_values
 
 
 # ====== Serial ====== #
@@ -164,6 +188,7 @@ while True:
     timestamp_list_one_day, air_quality_list_one_day, temperature_list_one_day, humidity_list_one_day, \
         altitude_list_one_day, timestamp_list_three_days, temperature_list_three_days, \
         humidity_list_three_days, pressure_list_three_days = connect_db_and_fetch_data()
+
     if timestamp_list_one_day is None:
         warning_message.warning("La base de données est vide, veuillez patienter le temps de recevoir des données.")
         card_sidebar.markdown(card(date_actuelle, heure_actuelle, None, None, None, None, None),
@@ -175,6 +200,38 @@ while True:
                                    pressure_list_three_days[-1], humidity_list_three_days[-1],
                                    air_quality_list_one_day[-1], altitude_list_one_day[-1]),
                               unsafe_allow_html=True)
+        # == Forecast temperature
+        if len(timestamp_list_three_days) >= 288:
+            # 288 correspond à 2 jours de données (1 points toutes les 10 minutes)
+            # Création d'un DataFrame avec vos données
+            df = pd.DataFrame(
+                {
+                    'temperature': temperature_list_three_days,
+                    'humidity': humidity_list_three_days,
+                    'pressure': pressure_list_three_days
+                },
+                index=timestamp_list_three_days
+            )
+            # Il est recommandé de différencier les données pour rendre les séries stationnaires
+            df_diff = df.diff().dropna()
+            # Instanciation du modèle VAR
+            model = VAR(df_diff)
+            # Ajustement du modèle (vous pouvez changer la fenêtre en fonction de vos besoins)
+            results = model.fit(5)  # 5 est un exemple de fenêtre, vous pouvez ajuster cette valeur
+            # Prévision des n prochains points (changez n par le nombre de points que vous voulez prédire)
+            n = 6  # changer n par le nombre de points que vous voulez prédire
+            lag_order = results.k_ar
+            # Intégration des prévisions (car nous avons différencié les données précédemment)
+            predictions = results.forecast(df.values[-lag_order:], n)
+            print("prediction : ", predictions)
+
+        # == Add None values to split the curves if time between two points is greater than the sampling frequency
+        temperature_list_one_day = process_values(timestamp_list_one_day, temperature_list_one_day)
+        humidity_list_one_day = process_values(timestamp_list_one_day, humidity_list_one_day)
+        air_quality_list_one_day = process_values(timestamp_list_one_day, air_quality_list_one_day)
+        pressure_list_three_days = process_values(timestamp_list_three_days, pressure_list_three_days)
+        temperature_list_three_days = process_values(timestamp_list_three_days, temperature_list_three_days)
+        humidity_list_three_days = process_values(timestamp_list_three_days, humidity_list_three_days)
 
         # == Air quality
         # Utiliser une liste en compréhension pour filtrer les valeurs None
@@ -355,12 +412,16 @@ while True:
         )), use_container_width=True)
 
         # == Pressure last 3 days
-        # Calcul de la moyenne
+        # Calcul de la moyenne, max et min
         filtered_list = [x for x in pressure_list_three_days if x is not None]
         if filtered_list:
             avg_pressure = sum(filtered_list) / len(filtered_list)
+            max_pressure = max(filtered_list)
+            min_pressure = min(filtered_list)
         else:
-            avg_pressure = None
+            avg_pressure = 1000
+            max_pressure = 980
+            min_pressure = 1030
 
         figure_pressure_last_3_days.plotly_chart(
             go.Figure(
@@ -375,7 +436,7 @@ while True:
                 ],
                 layout=go.Layout(
                     xaxis=dict(title='Date'),
-                    yaxis=dict(title='Pression', range=[min(pressure_list_three_days), max(pressure_list_three_days)]),
+                    yaxis=dict(title='Pression', range=[min_pressure, max_pressure]),
                     template='plotly_white',
                     shapes=[
                         # Ajout de la ligne horizontale
@@ -435,12 +496,12 @@ while True:
         # Calcul de la moyenne
         filtered_list = [x for x in humidity_list_three_days if x is not None]
         if filtered_list:
-            min_humidity_three_days = min(filtered_list) + 1
-            max_humidity_three_days = max(filtered_list) - 1
+            min_humidity_three_days = min(filtered_list) + 5
+            max_humidity_three_days = max(filtered_list) - 5
             avg_humidity = sum(filtered_list) / len(filtered_list)
         else:
-            min_humidity_three_days = 0
-            max_humidity_three_days = 100
+            min_humidity_three_days = -1
+            max_humidity_three_days = 101
             avg_humidity = None
 
         figure_humidity_last_3_days.plotly_chart(
@@ -491,4 +552,4 @@ while True:
         )
 
         # wait 30 seconds
-        time.sleep(30)
+        time.sleep(5)

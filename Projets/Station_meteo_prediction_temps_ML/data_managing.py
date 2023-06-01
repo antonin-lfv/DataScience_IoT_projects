@@ -39,6 +39,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     # print(f"Topic: {msg.topic}, Data: {msg.payload.decode('utf-8')}")
     data = json.loads(msg.payload.decode('utf-8'))
+    print(data)
 
     # Enregistrez les données dans la base de données
     c.execute("INSERT INTO weather_data VALUES (?, ?, ?, ?, ?, ?)",
@@ -52,6 +53,6 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect(mqtt_server, 1883, 60)
+client.connect(host=mqtt_server, port=1883, keepalive=60)
 
 client.loop_forever()
