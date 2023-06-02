@@ -148,7 +148,8 @@ def card(date, heure, temperature, pressure, humidity, air_quality, altitude):
             <p>Humidité<p>
             <h2>{round(humidity, 2) if humidity is not None else 'N/A'}%</h2>
             <p>Qualité de l'air<p>
-            <h2>{interpret_air_quality(air_quality) if air_quality is not None else 'N/A'} ({air_quality if air_quality is not None else 'N/A'})</h2>
+            <h2>{interpret_air_quality(air_quality) if air_quality is not None else 'N/A'} ({air_quality if 
+    air_quality is not None else 'N/A'})</h2>
         </div>
     """
     return card
