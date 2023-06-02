@@ -8,7 +8,9 @@ import sqlite3
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 import pandas as pd
-from statsmodels.tsa.api import VAR
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 
 from utils import sidebar_bg, interpret_air_quality
 
@@ -16,6 +18,7 @@ script_dir = os.path.dirname(os.path.realpath(__file__))
 
 color_mean = "#85c7ff"
 time_step = 5  # secondes
+pred_temperature = None
 
 
 # ==== Functions ==== #
@@ -144,7 +147,7 @@ def card(date, heure, temperature, pressure, humidity, air_quality, altitude):
             <p>Pression<p>
             <h2>{pa_to_hpa(pressure) if pressure is not None else 'N/A'}hPa</h2>
             <p>Humidité<p>
-            <h2>{round(humidity,2) if humidity is not None else 'N/A'}%</h2>
+            <h2>{round(humidity, 2) if humidity is not None else 'N/A'}%</h2>
             <p>Qualité de l'air<p>
             <h2>{interpret_air_quality(air_quality) if air_quality is not None else 'N/A'} ({air_quality if air_quality is not None else 'N/A'})</h2>
         </div>
@@ -172,7 +175,7 @@ def process_values(timestamps, values):
     datetime_objects = [datetime.strptime(ts, "%Y-%m-%dT%H:%M:%S") for ts in timestamps]
 
     for i in range(1, len(datetime_objects)):
-        if (datetime_objects[i] - datetime_objects[i-1]).total_seconds() > 2*time_step:
+        if (datetime_objects[i] - datetime_objects[i - 1]).total_seconds() > 2 * time_step:
             new_values.append(None)
         else:
             new_values.append(values[i])
@@ -201,29 +204,28 @@ while True:
                                    air_quality_list_one_day[-1], altitude_list_one_day[-1]),
                               unsafe_allow_html=True)
         # == Forecast temperature
-        if len(timestamp_list_three_days) >= 288:
-            # 288 correspond à 2 jours de données (1 points toutes les 10 minutes)
-            # Création d'un DataFrame avec vos données
-            df = pd.DataFrame(
-                {
-                    'temperature': temperature_list_three_days,
-                    'humidity': humidity_list_three_days,
-                    'pressure': pressure_list_three_days
-                },
-                index=timestamp_list_three_days
-            )
-            # Il est recommandé de différencier les données pour rendre les séries stationnaires
-            df_diff = df.diff().dropna()
-            # Instanciation du modèle VAR
-            model = VAR(df_diff)
-            # Ajustement du modèle (vous pouvez changer la fenêtre en fonction de vos besoins)
-            results = model.fit(5)  # 5 est un exemple de fenêtre, vous pouvez ajuster cette valeur
-            # Prévision des n prochains points (changez n par le nombre de points que vous voulez prédire)
-            n = 6  # changer n par le nombre de points que vous voulez prédire
-            lag_order = results.k_ar
-            # Intégration des prévisions (car nous avons différencié les données précédemment)
-            predictions = results.forecast(df.values[-lag_order:], n)
-            print("prediction : ", predictions)
+        if len(timestamp_list_three_days) >= 100:
+            data = pd.DataFrame({'timestamp': timestamp_list_three_days,
+                                 'temperature': temperature_list_three_days,
+                                 'humidity': humidity_list_three_days,
+                                 'pressure': pressure_list_three_days})
+            # Convertir les timestamps en entiers
+            data['timestamp'] = data.index.values
+            # Séparer les variables d'entrée (X) et de sortie (y)
+            X = data['timestamp'].values.reshape(-1, 1)
+            y = data['temperature'].values
+            # Diviser les données en ensembles d'entraînement et de test
+            # Créer les fonctions polynomiales de degré 2
+            poly_features = PolynomialFeatures(degree=2)
+            X_poly = poly_features.fit_transform(X)
+            # Entraîner le modèle de régression polynomiale
+            model = LinearRegression()
+            model.fit(X_poly, y)
+            y_pred = model.predict(X_poly)
+            # Créer les fonctions polynomiales correspondantes à la prochaine valeur
+            next_X_poly = poly_features.transform([[data['timestamp'].iloc[-1] + 1]])
+            # Prédire la température de la prochaine valeur
+            pred_temperature = model.predict(next_X_poly)[0]
 
         # == Add None values to split the curves if time between two points is greater than the sampling frequency
         temperature_list_one_day = process_values(timestamp_list_one_day, temperature_list_one_day)
@@ -293,7 +295,19 @@ while True:
                         y=temperature_list_one_day,
                         mode='lines',
                         name='Temperature',
-                        line=dict(color='rgb(0, 0, 0)', width=1)
+                        line=dict(color='rgb(0, 0, 0)', width=1, shape='spline')
+                    ),
+                    # On ajoute la prévision de la température en la liant à la dernière valeur de la courbe
+                    # avec une ligne en pointillés
+                    go.Scatter(
+                        x=[timestamp_list_one_day[-1],
+                           datetime.strptime(timestamp_list_one_day[-1], '%Y-%m-%dT%H:%M:%S') +
+                           (datetime.strptime(timestamp_list_one_day[1], '%Y-%m-%dT%H:%M:%S') -
+                            datetime.strptime(timestamp_list_one_day[0], '%Y-%m-%dT%H:%M:%S'))],
+                        y=[temperature_list_one_day[-1], pred_temperature],
+                        mode='markers+lines',
+                        name='Prévision',
+                        line=dict(color='rgb(0, 0, 0)', width=1, dash="dash", shape='spline')
                     )
                 ],
                 layout=go.Layout(
@@ -351,7 +365,18 @@ while True:
                         y=temperature_list_three_days,
                         mode='lines',
                         name='Temperature',
-                        line=dict(color='rgb(0, 0, 0)', width=1)
+                        line=dict(color='rgb(0, 0, 0)', width=1, shape='spline')
+                    ),
+                    # On ajoute la prévision de la température
+                    go.Scatter(
+                        x=[timestamp_list_three_days[-1],
+                           datetime.strptime(timestamp_list_three_days[-1], '%Y-%m-%dT%H:%M:%S') +
+                           (datetime.strptime(timestamp_list_three_days[1], '%Y-%m-%dT%H:%M:%S') -
+                            datetime.strptime(timestamp_list_three_days[0], '%Y-%m-%dT%H:%M:%S'))],
+                        y=[temperature_list_three_days[-1], pred_temperature],
+                        mode='markers+lines',
+                        name='Prévision',
+                        line=dict(color='rgb(0, 0, 0)', width=1, dash="dash", shape='spline')
                     )
                 ],
                 layout=go.Layout(
