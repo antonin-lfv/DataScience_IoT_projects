@@ -26,8 +26,3 @@ def set_bg_hack(main_bg):
          """,
         unsafe_allow_html=True
     )
-
-
-set_bg_hack("color_background.jpg")
-
-st.title("Projet 7 : Prédiction du prix de vente de biens immobiliers")
