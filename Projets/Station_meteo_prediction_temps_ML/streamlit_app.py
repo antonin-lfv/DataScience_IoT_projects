@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 import pandas as pd
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
 
 from utils import sidebar_bg, interpret_air_quality
 
