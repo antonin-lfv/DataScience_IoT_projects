@@ -95,10 +95,10 @@ Pour lancer l'interface, le serveur MQTT et la lecture des données du serveur, 
 
 <br>
 
-### Création de carte de relief 3D
-[![Arduino](https://img.shields.io/badge/Arduino-FFF?logo=Arduino)]() &nbsp; [![Scikit-learn](https://img.shields.io/badge/Scikit--learn-FFF?logo=Scikit-learn)]() &nbsp;
+### Calcul et visualisation de la déformation d'une structure
+[![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]() &nbsp; [![MQTT](https://img.shields.io/badge/MQTT-FFF?logo=mqtt&logoColor=000)]() &nbsp; [![ESP32](https://img.shields.io/badge/ESP32-FFF?logo=esphome&logoColor=000)]()
 
-Ce projet vise à générer une représentation 3D précise d'un environnement en utilisant un capteur ultrasonique HC-SR04 monté sur un Arduino. Le capteur scanne l'environnement à intervalles réguliers, enregistrant les distances pour déduire la hauteur du relief. Ces mesures sont ensuite transmises à un ordinateur via le port série. Elles sont employées pour effectuer une interpolation tridimensionnelle avec Scikit-learn, créant une carte détaillée de l'espace. Le projet met en avant la capacité d'effectuer une cartographie 3D détaillée de petits environnements en utilisant des techniques d'apprentissage automatique et de traitement de données.
+Ce projet vise à développer un système de surveillance de la déformation structurelle en temps réel, en utilisant une combinaison de capteurs d'accélération et de gyroscopes. Le système est basé sur plusieurs capteurs MPU-6050, chacun connecté à un ESP32, pour recueillir les données d'accélération et de rotation à différents points de la structure. Les données sont ensuite envoyées à un serveur local via MQTT, où elles sont traitées pour estimer la déformation de la structure en temps réel. Pour cela, nous utilisons une technique de fusion de capteurs, telle que le filtre de Kalman ou le filtre complémentaire, pour combiner les mesures de l'accéléromètre et du gyroscope et obtenir une meilleure estimation de la position et de l'orientation de chaque capteur. Enfin, les résultats sont visualisés sous forme de structure 3D déformable en utilisant la bibliothèque Plotly, permettant une analyse visuelle intuitive de l'état de la structure. Ce système peut aider à détecter les problèmes structurels précocement et à prévenir les défaillances potentielles.
 
 <br>
 
