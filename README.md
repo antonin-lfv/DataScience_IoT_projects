@@ -100,6 +100,9 @@ Pour lancer l'interface, le serveur MQTT et la lecture des données du serveur, 
 
 Ce projet vise à développer un système de surveillance de la déformation structurelle en temps réel, en utilisant une combinaison de capteurs d'accélération et de gyroscopes. Le système est basé sur plusieurs capteurs MPU-6050, chacun connecté à un ESP32, pour recueillir les données d'accélération et de rotation à différents points de la structure. Les données sont ensuite envoyées à un serveur local via MQTT, où elles sont traitées pour estimer la déformation de la structure en temps réel. Pour cela, nous utilisons une technique de fusion de capteurs, telle que le filtre de Kalman ou le filtre complémentaire, pour combiner les mesures de l'accéléromètre et du gyroscope et obtenir une meilleure estimation de la position et de l'orientation de chaque capteur. Enfin, les résultats sont visualisés sous forme de structure 3D déformable en utilisant la bibliothèque Plotly, permettant une analyse visuelle intuitive de l'état de la structure. Ce système peut aider à détecter les problèmes structurels précocement et à prévenir les défaillances potentielles.
 
+**Projet en cours**
+
+
 <br>
 
 ---
