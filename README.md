@@ -7,7 +7,7 @@
   <br>
 </h1>
 
-<h4 align="center">Découvrez la data science sur Arduino et Raspberry Pi au travers de divers projets.</h4>
+<h4 align="center">Découvrez la data science avec l'IoT au travers de divers projets.</h4>
 
 <p align="center">
  <a href="#"><img src="https://img.shields.io/badge/Raspberry_Pi-FFF?logo=raspberry+pi&logoColor=C51A4A" alt="Raspberry Pi"></a>
