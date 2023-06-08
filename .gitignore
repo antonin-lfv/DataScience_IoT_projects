@@ -168,3 +168,4 @@ cython_debug/
 /Projets/Station_meteo_prediction_temps_ML/config.json
 /Projets/Station_meteo_prediction_temps_ML/weather_data.db
 streamlit_tools.py
+/Projets/Deformation_structure/config.json

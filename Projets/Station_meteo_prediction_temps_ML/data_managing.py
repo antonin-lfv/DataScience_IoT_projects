@@ -23,8 +23,12 @@ c.execute('''
 ''')
 
 
-with open(file_path_config) as config_file:
-    config = json.load(config_file)
+try:
+    with open(file_path_config) as config_file:
+        config = json.load(config_file)
+except FileNotFoundError:
+    print("Le fichier de configuration n'a pas été trouvé")
+    exit(1)
 
 ssid = config['ssid']
 password = config['password']
