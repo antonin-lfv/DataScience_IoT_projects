@@ -90,7 +90,7 @@ moved_points_control = [rotate_point(a(point) + mean_vector, residual_gyro_vecto
 # Créer une instance de Bezier_Vector_3D
 bezier = Bezier_Vector_3D(moved_points_control, vector_points)
 
-data, max_def_per_segment = bezier.bezier_seg_per_seg(normal=True, show=False)
+data, max_def_per_segment = bezier.bezier_seg_per_seg(show=False)
 # moved structure
 data.append(go.Scatter3d(x=[moved_points_control[i][0] for i in range(len(moved_points_control))],
                          y=[moved_points_control[i][1] for i in range(len(moved_points_control))],

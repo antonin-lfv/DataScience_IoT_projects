@@ -1,13 +1,14 @@
 import numpy as np
 import plotly.graph_objects as go
 from plotly.offline import plot
+from fastdist import fastdist
 
 a = np.array
 
 
 def distance(p1, p2):
     """euclidean distance between 2 points"""
-    return np.sqrt(np.sum((a(p1) - a(p2)) ** 2, axis=0))
+    return fastdist.euclidean(p1, p2)
 
 
 def distance_between_1pts_and_segment(p, a, b):
@@ -39,7 +40,7 @@ class Bezier_Vector_3D:
     >>> bezier.bezier_seg_per_seg()
     """
 
-    def __init__(self, points_control, vector_points, echantillonnage=20000, show_control_points=False):
+    def __init__(self, points_control, vector_points, echantillonnage=2000, show_control_points=False):
         """
         :param points_control: list of list of size 3, with x, y, z of each point
         :param vector_points: list of list of size 3, with coord of the vector at this point
@@ -78,9 +79,8 @@ class Bezier_Vector_3D:
         curve = np.delete(curve, 0, 0)
         return curve
 
-    def bezier_seg_per_seg(self, normal=False, show=True, figure_name: str = None):
+    def bezier_seg_per_seg(self, show=True, figure_name: str = None):
         """Create the figure, and return the length of each segment and bezier curve of the figure
-        :param normal: if True, compute the difference between normal structure and bezier curves
         :param show: if True, plot the result
         :param figure_name: if not None, add the name in the plot
         """
@@ -107,37 +107,28 @@ class Bezier_Vector_3D:
             x_pts, y_pts, z_pts = list(points_control[:, 0]), list(points_control[:, 1]), list(
                 points_control[:, 2])
             # Plotly figure
-            if not normal:
+            difference_normal_deformation = a([distance_between_1pts_and_segment(
+                a([x_curve[j], y_curve[j], z_curve[j]]), self.points_control[i], self.points_control[i + 1])
+                for j in range(self.echantillonnage)])
+            dict_deformation_max_per_segment[i] = max(difference_normal_deformation)
+            if max(difference_normal_deformation) < 0.0005:
+                plotly_bezier_curve.append(go.Scatter3d(x=x_curve,
+                                                        y=y_curve,
+                                                        z=z_curve,
+                                                        marker=dict(size=2,
+                                                                    color="#0d0183",
+                                                                    ),
+                                                        name=f"Segment {i}"
+                                                        ))
+            else:
                 plotly_bezier_curve.append(go.Scatter3d(x=x_curve,
                                                         y=y_curve,
                                                         z=z_curve,
                                                         marker=dict(size=1,
-                                                                    color="blue"),
-                                                        name=f"Bezier curve {figure_name}" if figure_name else None
+                                                                    color=difference_normal_deformation,
+                                                                    colorscale='jet'),
+                                                        name=f"Segment {i}"
                                                         ))
-            else:
-                difference_normal_deformation = a([distance_between_1pts_and_segment(
-                    a([x_curve[j], y_curve[j], z_curve[j]]), self.points_control[i], self.points_control[i + 1])
-                    for j in range(self.echantillonnage)])
-                dict_deformation_max_per_segment[i] = max(difference_normal_deformation)
-                if max(difference_normal_deformation) < 0.0005:
-                    plotly_bezier_curve.append(go.Scatter3d(x=x_curve,
-                                                            y=y_curve,
-                                                            z=z_curve,
-                                                            marker=dict(size=2,
-                                                                        color="#0d0183",
-                                                                        ),
-                                                            name=f"Segment {i}"
-                                                            ))
-                else:
-                    plotly_bezier_curve.append(go.Scatter3d(x=x_curve,
-                                                            y=y_curve,
-                                                            z=z_curve,
-                                                            marker=dict(size=1,
-                                                                        color=difference_normal_deformation,
-                                                                        colorscale='jet'),
-                                                            name=f"Segment {i}"
-                                                            ))
             if self.show_control_points:
                 plotly_control_points.append(go.Scatter3d(x=x_pts,
                                                           y=y_pts,
