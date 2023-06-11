@@ -6,6 +6,45 @@ from fastdist import fastdist
 a = np.array
 
 
+def format_distance(max_def):
+    if max_def < 0.001:  # Less than 1 mm
+        return f'{max_def * 1000:.2f} mm'
+    elif max_def < 1.0:  # Less than 1 m
+        return f'{max_def * 100:.2f} cm'
+    else:
+        return f'{max_def:.2f} m'
+
+
+def rotate_point(point, rotation_vector):
+    """Rotate a point around the Z, Y and X axes by given angles."""
+    # Unpack the rotation vector
+    rx, ry, rz = rotation_vector
+
+    # Create rotation matrices
+    rot_x = a([
+        [1, 0, 0],
+        [0, np.cos(rx), -np.sin(rx)],
+        [0, np.sin(rx), np.cos(rx)]
+    ])
+    rot_y = a([
+        [np.cos(ry), 0, np.sin(ry)],
+        [0, 1, 0],
+        [-np.sin(ry), 0, np.cos(ry)]
+    ])
+    rot_z = a([
+        [np.cos(rz), -np.sin(rz), 0],
+        [np.sin(rz), np.cos(rz), 0],
+        [0, 0, 1]
+    ])
+
+    # Perform rotations
+    point = np.dot(rot_z, point)
+    point = np.dot(rot_y, point)
+    point = np.dot(rot_x, point)
+
+    return point
+
+
 def distance(p1, p2):
     """euclidean distance between 2 points"""
     return fastdist.euclidean(p1, p2)
