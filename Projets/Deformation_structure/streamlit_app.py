@@ -1,17 +1,18 @@
 from Projets.Deformation_structure.utils import *
 from fastdist import fastdist
+import json
+
+# Initial positions from Projets/Deformation_structure/sensor_initial_positions.json
+with open("Projets/Deformation_structure/sensor_initial_positions.json", "r") as f:
+    initial_positions = json.load(f)
+    # convert all values to numpy arrays
+    initial_positions = {k: a(v) for k, v in initial_positions.items()}
 
 # accelerations
 accel_data = {'capteur0': {'x': 0, 'y': 0.1, 'z': 0},
-               'capteur1': {'x': 0., 'y': 0.0, 'z': 0.1},
-               'capteur2': {'x': 0.01, 'y': 0.0, 'z': -0.1},
-               'capteur3': {'x': 0.2, 'y': 0.5, 'z': 0.9}}
-
-# Initial positions
-initial_positions = {'capteur0': a([0, 0, 0]),
-                     'capteur1': a([0, 0, 3]),
-                     'capteur2': a([0, 0, 6]),
-                     'capteur3': a([0, 0, 10])}
+              'capteur1': {'x': 0., 'y': 0.0, 'z': 0.1},
+              'capteur2': {'x': 0.01, 'y': 0.0, 'z': -0.1},
+              'capteur3': {'x': 0.2, 'y': 0.5, 'z': 0.9}}
 
 # Exemple de données de gyroscope
 gyro_data = {'capteur0': {'x': 0, 'y': 0.1, 'z': 0},
@@ -131,6 +132,7 @@ def compute_structure(accel_data, initial_positions, gyro_data):
             yaxis=dict(range=[ymin, ymax], ),
             zaxis=dict(range=[zmin * 0.9, zmax * 1.1], ),
         ),
+        template="plotly_white",
     )
 
     return fig, moved_points_control

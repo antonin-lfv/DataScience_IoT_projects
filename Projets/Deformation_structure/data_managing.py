@@ -1,7 +1,7 @@
 import json
-import sqlite3
 import paho.mqtt.client as mqtt
 from datetime import datetime
+from pymongo import MongoClient
 
 # Configuration du serveur MQTT
 file_path_config = "config.json"
@@ -10,37 +10,45 @@ try:
         config = json.load(config_file)
 except FileNotFoundError:
     print("Le fichier de configuration n'a pas été trouvé")
-    exit(1)
+    exit()
 
 mqtt_server = config['mqtt_server_ip']
+mongo_server_url = config['mongo_server_url']
 
-# Base de données SQLite
-database = sqlite3.connect('accelerometer_sensor_data.db')
+print(f"MQTT server: {mqtt_server}")
+print(f"MongoDB server: {mongo_server_url}")
 
-# Création de la table s'il n'existe pas déjà
-cursor = database.cursor()
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS donnees_capteurs(
-     id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
-     timestamp DATETIME,
-     capteur TEXT,
-     acceleration_x INTEGER,
-     acceleration_y INTEGER,
-     acceleration_z INTEGER,
-     gyroscope_x INTEGER,
-     gyroscope_y INTEGER,
-     gyroscope_z INTEGER
-)
-""")
-database.commit()
+# Créer une connexion à la base de données
+client = MongoClient(mongo_server_url)
+db = client.deformation_structure_db
+collection = db.sensor_data
+
+# run mongodb server : brew services start mongodb-community
+# run mosquitto server : /opt/homebrew/Cellar/mosquitto/2.0.15/sbin/mosquitto -c /opt/homebrew/Cellar/mosquitto/2.0.15/etc/mosquitto/mosquitto.conf
+# stop mongodb server : brew services stop mongodb-community
+# show running services (mosquitto and mongodb) : brew services list
 
 # Buffer pour stocker temporairement les données des capteurs
 data_buffer = {}
 
 
+def store_data_in_db(data_buffer):
+    # Formattez vos données comme vous le souhaitez. Ici, nous créons un document avec
+    # un champ pour le timestamp, l'accélération et le gyroscope pour chaque capteur.
+    data_to_store = {
+        'timestamp': datetime.now(),
+    }
+    for sensor, (acceleration, gyroscope) in data_buffer.items():
+        data_to_store[f'{sensor}_acceleration'] = acceleration
+        data_to_store[f'{sensor}_gyroscope'] = gyroscope
+
+    # Stockez les données dans la collection 'sensor_data'. Remplacez 'sensor_data' par le nom de votre collection.
+    collection.insert_one(data_to_store)
+
+
 # Fonctions pour MQTT
 def on_connect(client, userdata, flags, rc):
-    print(f"Connected with result code {str(rc)}")
+    print(f"Connected with result code {str(rc)}, subscribing to topics...")
     client.subscribe("topicCapteur1")
     client.subscribe("topicCapteur2")
     client.subscribe("topicCapteur3")
@@ -56,21 +64,7 @@ def on_message(client, userdata, msg):
     data_buffer[msg.topic] = (acceleration, gyroscope)
 
     if len(data_buffer) == 3:  # Nous avons reçu des données de tous les capteurs
-        timestamp = datetime.now()
-        for capteur, data in data_buffer.items():
-            acceleration, gyroscope = data
-            cursor.execute("""
-                INSERT INTO donnees_capteurs(timestamp, capteur, acceleration_x, acceleration_y, acceleration_z, gyroscope_x, gyroscope_y, gyroscope_z) VALUES(?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                timestamp, capteur,
-                acceleration['x'],
-                acceleration['y'],
-                acceleration['z'],
-                gyroscope['x'],
-                gyroscope['y'],
-                gyroscope['z']))
-        database.commit()
-        data_buffer.clear()  # Effacer le buffer pour les prochaines données
+        store_data_in_db(data_buffer)
 
 
 client = mqtt.Client()
@@ -85,4 +79,5 @@ try:
 except KeyboardInterrupt:
     print("Interrupted by Keyboard")
 finally:
-    database.close()
+    # Fermer la connexion à la base de données
+    client.disconnect()
