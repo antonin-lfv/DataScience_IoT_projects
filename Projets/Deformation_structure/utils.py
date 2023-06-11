@@ -148,6 +148,6 @@ class Bezier_Vector_3D:
 
         data = plotly_bezier_curve + plotly_control_points if self.show_control_points else plotly_bezier_curve
         if show:
-            fig_ = go.Figure(data=data)
+            fig_ = go.Figure(data=data, layout=go.Layout(paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)'))
             plot(fig_)
         return data, dict_deformation_max_per_segment

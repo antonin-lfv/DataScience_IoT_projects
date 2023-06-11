@@ -1,7 +1,3 @@
-import json
-import random
-from datetime import datetime
-import sqlite3
 from Projets.Deformation_structure.utils import *
 from fastdist import fastdist
 
@@ -17,132 +13,35 @@ def format_distance(max_def):
         return f'{max_def:.2f} m'
 
 
-def generate_test_data():
-    data = {
-        "acceleration": {
-            "x": random.uniform(-10.0, 10.0),
-            "y": random.uniform(-10.0, 10.0),
-            "z": random.uniform(-10.0, 10.0)
-        },
-        "gyroscope": {
-            "x": random.uniform(-180.0, 180.0),
-            "y": random.uniform(-180.0, 180.0),
-            "z": random.uniform(-180.0, 180.0)
-        }
-    }
+def rotate_point(point, rotation_vector):
+    """Rotate a point around the Z, Y and X axes by given angles."""
+    # Unpack the rotation vector
+    rx, ry, rz = rotation_vector
 
-    return data
+    # Create rotation matrices
+    rot_x = np.array([
+        [1, 0, 0],
+        [0, np.cos(rx), -np.sin(rx)],
+        [0, np.sin(rx), np.cos(rx)]
+    ])
+    rot_y = np.array([
+        [np.cos(ry), 0, np.sin(ry)],
+        [0, 1, 0],
+        [-np.sin(ry), 0, np.cos(ry)]
+    ])
+    rot_z = np.array([
+        [np.cos(rz), -np.sin(rz), 0],
+        [np.sin(rz), np.cos(rz), 0],
+        [0, 0, 1]
+    ])
 
+    # Perform rotations
+    point = np.dot(rot_z, point)
+    point = np.dot(rot_y, point)
+    point = np.dot(rot_x, point)
 
-# Generate test data for each sensor
-test_data_capteur1 = generate_test_data()
-test_data_capteur2 = generate_test_data()
-test_data_capteur3 = generate_test_data()
+    return point
 
-# Convert data to JSON format
-test_data_capteur1_json = json.dumps(test_data_capteur1)
-test_data_capteur2_json = json.dumps(test_data_capteur2)
-test_data_capteur3_json = json.dumps(test_data_capteur3)
-
-# Base de données SQLite
-database = sqlite3.connect('Projets/Deformation_structure/accelerometer_sensor_data.db')
-
-# Création de la table s'il n'existe pas déjà
-cursor = database.cursor()
-if flag:
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS donnees_capteurs(
-         id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
-         timestamp DATETIME,
-         capteur TEXT,
-         acceleration_x INTEGER,
-         acceleration_y INTEGER,
-         acceleration_z INTEGER,
-         gyroscope_x INTEGER,
-         gyroscope_y INTEGER,
-         gyroscope_z INTEGER
-    )
-    """)
-    datetime_ = datetime.now()
-    # Add data to sqlite database
-    cursor.execute("""
-        INSERT INTO donnees_capteurs(timestamp, capteur, 
-        acceleration_x, acceleration_y, acceleration_z, 
-        gyroscope_x, gyroscope_y, gyroscope_z) 
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        datetime_, "topicCapteur1",
-        test_data_capteur1['acceleration']['x'],
-        test_data_capteur1['acceleration']['y'],
-        test_data_capteur1['acceleration']['z'],
-        test_data_capteur1['gyroscope']['x'],
-        test_data_capteur1['gyroscope']['y'],
-        test_data_capteur1['gyroscope']['z']))
-    cursor.execute("""
-        INSERT INTO donnees_capteurs(timestamp, capteur, 
-        acceleration_x, acceleration_y, acceleration_z, 
-        gyroscope_x, gyroscope_y, gyroscope_z) 
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        datetime_, "topicCapteur2",
-        test_data_capteur2['acceleration']['x'],
-        test_data_capteur2['acceleration']['y'],
-        test_data_capteur2['acceleration']['z'],
-        test_data_capteur2['gyroscope']['x'],
-        test_data_capteur2['gyroscope']['y'],
-        test_data_capteur2['gyroscope']['z']))
-    cursor.execute("""
-        INSERT INTO donnees_capteurs(timestamp, capteur, 
-        acceleration_x, acceleration_y, acceleration_z, 
-        gyroscope_x, gyroscope_y, gyroscope_z) 
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        datetime_, "topicCapteur3",
-        test_data_capteur3['acceleration']['x'],
-        test_data_capteur3['acceleration']['y'],
-        test_data_capteur3['acceleration']['z'],
-        test_data_capteur3['gyroscope']['x'],
-        test_data_capteur3['gyroscope']['y'],
-        test_data_capteur3['gyroscope']['z']))
-    database.commit()
-
-
-# Récupérer uniquement les données des capteurs pour le dernier timestamp
-def get_data_from_db_last_timestamp():
-    cursor.execute("""
-        SELECT * FROM donnees_capteurs
-        WHERE timestamp = (SELECT MAX(timestamp) FROM donnees_capteurs)
-    """)
-    rows = cursor.fetchall()
-    return rows
-
-
-data = get_data_from_db_last_timestamp()
-
-# create a dictionary to store the data
-sensor_data = {}
-for row in data:
-    sensor_data[row[2]] = {
-        "acceleration": {
-            "x": row[3],
-            "y": row[4],
-            "z": row[5]
-        },
-        "gyroscope": {
-            "x": row[6],
-            "y": row[7],
-            "z": row[8]
-        }
-    }
-
-
-def load_initial_positions(file):
-    with open(file, 'r') as f:
-        data = json.load(f)
-    return data
-
-
-# initial_positions = load_initial_positions('Projets/Deformation_structure/sensor_positions.json')
 
 # Exemple de données d'accélération
 sensor_data = {'capteur0': {'x': 0, 'y': 0.1, 'z': 0},
@@ -156,24 +55,37 @@ initial_positions = {'capteur0': a([0, 0, 0]),
                      'capteur2': a([0, 0, 6]),
                      'capteur3': a([0, 0, 10])}
 
-# Calculer les vecteurs à partir des données d'accélération
+# Exemple de données de gyroscope
+gyro_data = {'capteur0': {'x': 0, 'y': 0.1, 'z': 0},
+             'capteur1': {'x': 0., 'y': 0.0, 'z': 0.1},
+             'capteur2': {'x': 0.01, 'y': 0.0, 'z': -0.1},
+             'capteur3': {'x': 0.01, 'y': 0.1, 'z': 0.1}}
+
+# Compute the vectors from the acceleration data
 vectors = {k: a([v['x'], v['y'], v['z']]) for k, v in sensor_data.items()}
 
-# Calculer la moyenne des accélérations
+# Compute the mean of the accelerations
 mean_vector = np.mean(list(vectors.values()), axis=0)
 
-# Convertir le vecteur moyen en vecteur distance en calculant la norme
-distance_deplacement_moyen = format_distance(np.linalg.norm(mean_vector))
-
-# Calculer les accélérations résiduelles et les utiliser pour ajuster les vecteurs
+# Compute the residual accelerations and use them to adjust the vectors
 residual_vectors = {k: np.maximum(v - mean_vector, 0) for k, v in vectors.items()}
 
-# Créer les points de contrôle et les vecteurs pour la courbe de Bézier
+# Create the control points and vectors for the Bezier curve
 points_control = list(initial_positions.values())
 vector_points = list(residual_vectors.values())
 
-# Créer une nouvelle liste pour les points de contrôle déplacés
-moved_points_control = [a(point) + mean_vector for point in points_control]
+# Compute the vectors from the gyroscope data
+gyro_vectors = {k: a([v['x'], v['y'], v['z']]) for k, v in gyro_data.items()}
+
+# Compute the mean of the rotations
+mean_gyro_vector = np.mean(list(gyro_vectors.values()), axis=0)
+
+# Compute the residual rotations
+residual_gyro_vectors = {k: v - mean_gyro_vector for k, v in gyro_vectors.items()}
+
+# Rotate and move control points
+moved_points_control = [rotate_point(a(point) + mean_vector, residual_gyro_vectors[k]) for k, point in
+                        initial_positions.items()]
 
 # Créer une instance de Bezier_Vector_3D
 bezier = Bezier_Vector_3D(moved_points_control, vector_points)
@@ -198,6 +110,24 @@ data.append(go.Scatter3d(x=[initial_positions[i][0] for i in initial_positions.k
                          marker=dict(color="green", size=2),
                          line=dict(color="green", width=2)))
 
+# Compute the euclidean distance between the initial and moved points using fastdist
+distances = [fastdist.euclidean(point, moved_points_control[i]) for i, point in enumerate(points_control)]
+# Convert distances to appropriate units
+distances = [format_distance(d) for d in distances]
+
+# Add text to the graph showing the distance moved by each sensor
+for i, (point, distance) in enumerate(zip(moved_points_control, distances)):
+    data.append(
+        go.Scatter3d(
+            x=[point[0]], y=[point[1]], z=[point[2]],
+            mode="text",
+            text=[f"Déplacement du capteur : {distance}"],
+            textposition="top left",
+            textfont=dict(size=8),
+            showlegend=False
+        )
+    )
+
 zmax = max([moved_points_control[i][2] for i in range(len(moved_points_control))])
 zmin = min([moved_points_control[i][2] for i in range(len(moved_points_control))])
 xmax = max([moved_points_control[i][0] for i in range(len(moved_points_control))]) + abs(zmax - zmin)
@@ -211,9 +141,9 @@ for i, max_def in max_def_per_segment.items():
     formatted_def = format_distance(max_def)
 
     # Calculate the midpoint of the segment
-    midpoint = [(points_control[i][0] + points_control[i+1][0]) / 2,
-                (points_control[i][1] + points_control[i+1][1]) / 2,
-                (points_control[i][2] + points_control[i+1][2]) / 2]
+    midpoint = [(points_control[i][0] + points_control[i + 1][0]) / 2,
+                (points_control[i][1] + points_control[i + 1][1]) / 2,
+                (points_control[i][2] + points_control[i + 1][2]) / 2]
 
     fig.add_trace(
         go.Scatter3d(
@@ -222,21 +152,18 @@ for i, max_def in max_def_per_segment.items():
             z=[midpoint[2]],
             mode='text',
             text=[f'Max deformation: {formatted_def}'],
-            textposition='bottom center',
+            textposition='top right',
             textfont=dict(size=8),
             marker=dict(size=1, color="black"),
             showlegend=False
         )
     )
 fig.update_layout(
-    title=f"Aperçu de la structure - Déplacement de la structure: {distance_deplacement_moyen}",
+    title=f"Aperçu de la structure",
     scene=dict(
         xaxis=dict(range=[xmin, xmax], ),
         yaxis=dict(range=[ymin, ymax], ),
         zaxis=dict(range=[zmin * 0.9, zmax * 1.1], ),
     ),
-    # transparent background
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
 )
 plot(fig)
