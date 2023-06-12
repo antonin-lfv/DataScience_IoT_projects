@@ -11,7 +11,7 @@ Pour lancer l'interface, le serveur MQTT et la lecture des données du serveur, 
  
 **Aperçu**
 <p align="center">
-  <img src="Projets/Station_meteo_prediction_temps_ML/preview.jpg" alt="preview projet weather station" width="800">
+  <img src="preview.jpg" alt="preview projet weather station" width="800">
 </p>
 
 <br>
