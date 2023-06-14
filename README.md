@@ -98,7 +98,7 @@ Pour lancer l'interface, le serveur MQTT et la lecture des données du serveur, 
 ### Calcul et visualisation de la déformation d'une structure
 [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]() &nbsp; [![MQTT](https://img.shields.io/badge/MQTT-FFF?logo=mqtt&logoColor=000)]() &nbsp; [![ESP32](https://img.shields.io/badge/ESP32-FFF?logo=esphome&logoColor=000)]()
 
-Ce projet vise à développer un système de surveillance de la déformation structurelle en temps réel, en utilisant une combinaison de capteurs d'accélération et de gyroscopes. Le système est basé sur plusieurs capteurs MPU-6050, chacun connecté à un ESP32, pour recueillir les données d'accélération et de rotation à différents points de la structure. Les données sont ensuite envoyées à un serveur local via MQTT, où elles sont traitées pour estimer la déformation de la structure en temps réel. Pour cela, nous utilisons une technique de fusion de capteurs, telle que le filtre de Kalman ou le filtre complémentaire, pour combiner les mesures de l'accéléromètre et du gyroscope et obtenir une meilleure estimation de la position et de l'orientation de chaque capteur. Enfin, les résultats sont visualisés sous forme de structure 3D déformable en utilisant la bibliothèque Plotly, permettant une analyse visuelle intuitive de l'état de la structure. Ce système peut aider à détecter les problèmes structurels précocement et à prévenir les défaillances potentielles.
+Ce projet vise à développer un système de surveillance de la déformation d'une structure en temps réel, en utilisant une combinaison de capteurs d'accélération et de gyroscopes. Trois capteurs MPU6050 sont utilisés pour détecter les variations d'accélération et de rotation (gyroscope) sur trois points spécifiques de la structure. Ces capteurs sont connectés à des modules ESP32 qui transmettent les données collectées à un serveur MQTT local. Un script Python récupère ces données, les traite pour estimer la déformation de la structure et les stocke dans une base de données MongoDB pour une analyse ultérieure. Les déformations de la structure sont visualisées en temps réel à l'aide d'une courbe de Bézier 3D, ce qui permet d'observer l'évolution de l'inclinaison et du mouvement de la structure. Ce système offre une solution de surveillance structurelle en temps réel.
 
 **Projet en cours**
 
@@ -110,4 +110,3 @@ Ce projet vise à développer un système de surveillance de la déformation str
 > Website [antoninlefevre.com](https://antonin-lfv.github.io) &nbsp;&middot;&nbsp;
 > GitHub [@antonin-lfv](https://github.com/antonin-lfv) &nbsp;&middot;&nbsp;
 > Linkedin [@antonin](https://www.linkedin.com/in/antonin-lefevre-0110)
-
