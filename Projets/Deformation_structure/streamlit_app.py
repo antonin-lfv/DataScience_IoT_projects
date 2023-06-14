@@ -1,24 +1,48 @@
 from Projets.Deformation_structure.utils import *
 from fastdist import fastdist
 import json
+from pymongo import MongoClient
 
-# Initial positions from Projets/Deformation_structure/sensor_initial_positions.json
-with open("Projets/Deformation_structure/sensor_initial_positions.json", "r") as f:
-    initial_positions = json.load(f)
-    # convert all values to numpy arrays
-    initial_positions = {k: a(v) for k, v in initial_positions.items()}
+# Configuration du serveur MQTT
+file_path_config = "Projets/Deformation_structure/config.json"
+# le fichier config ressemble à ça :
+# {
+#   "ssid" : "your ssid",
+#   "password" : "your password
+#   "mqtt_server_ip" : "your mqtt server ip",
+#   "mongo_server_url" : "mongodb://localhost:27017/"
+# }
+try:
+    with open(file_path_config) as config_file:
+        config = json.load(config_file)
+    mqtt_server = config['mqtt_server_ip']
+    mongo_server_url = config['mongo_server_url']
+except FileNotFoundError:
+    print("Le fichier de configuration n'a pas été trouvé")
+    exit()
 
-# accelerations
-accel_data = {'capteur0': {'x': 0, 'y': 0.1, 'z': 0},
-              'capteur1': {'x': 0., 'y': 0.0, 'z': 0.1},
-              'capteur2': {'x': 0.01, 'y': 0.0, 'z': -0.1},
-              'capteur3': {'x': 0.2, 'y': 0.5, 'z': 0.9}}
+client = MongoClient(mongo_server_url)
+db = client.deformation_structure_db
 
-# Exemple de données de gyroscope
-gyro_data = {'capteur0': {'x': 0, 'y': 0.1, 'z': 0},
-             'capteur1': {'x': 0., 'y': 0.0, 'z': 0.1},
-             'capteur2': {'x': 0.01, 'y': 0.0, 'z': -0.1},
-             'capteur3': {'x': 0.01, 'y': 0.1, 'z': 0.1}}
+# Get initial positions :
+# Get the last timestamp from the collection history_positions and sensor_data
+# If the two timestamps are the same, we get the before last timestamp for the current positions
+# Else, we get the last timestamp for the current positions
+last_timestamp_history_positions = db.history_positions.find().sort('timestamp', -1).limit(1)[0]['timestamp']
+last_timestamp_sensor_data = db.sensor_data.find().sort('timestamp', -1).limit(1)[0]['timestamp']
+if last_timestamp_history_positions == last_timestamp_sensor_data:
+    initial_positions = db.history_positions.find().sort('timestamp', -1).limit(2)[1]
+    initial_positions = {k: a(v) for k, v in initial_positions['positions'].items() if k != '_id'}
+else:
+    initial_positions = db.history_positions.find().sort('timestamp', -1).limit(1)[0]
+    initial_positions = {k: a(v) for k, v in initial_positions['positions'].items() if k != '_id'}
+
+# Get acceleration and gyro data from the database deformation_structure_db and collection sensor_data
+# Select the one with the most recent timestamp
+data = db.sensor_data.find().sort('timestamp', -1).limit(1)[0]
+accel_data = data['acceleration']
+gyro_data = data['gyroscope']
+timestamp = data['timestamp']
 
 
 def compute_structure(accel_data, initial_positions, gyro_data):
@@ -140,3 +164,18 @@ def compute_structure(accel_data, initial_positions, gyro_data):
 
 fig, new_positions = compute_structure(accel_data, initial_positions, gyro_data)
 plot(fig)
+
+# === Insert new positions in mongoDB only if the last timestamp in history_positions is different
+# from the last timestamp of sensor_data collection ===
+# Get the last timestamp of the sensor_data collection
+last_timestamp = list(db.sensor_data.find().sort("timestamp", -1).limit(1))[0]["timestamp"]
+# Get the last timestamp of the history_positions collection
+last_timestamp_history = list(db.history_positions.find().sort("timestamp", -1).limit(1))[0]["timestamp"]
+
+if last_timestamp != last_timestamp_history:
+    # Save the new positions to mongoDB in the database deformation_structure_db and the collection history_positions
+    db = client.deformation_structure_db
+    collection = db.history_positions
+    # create the json to insert with same keys as initial_positions
+    collection.insert_one({"timestamp": timestamp,
+                           "positions": {key: list(val) for key, val in zip(initial_positions.keys(), new_positions)}})
