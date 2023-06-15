@@ -121,7 +121,7 @@ def compute_structure(accel_data, initial_positions, gyro_data):
                 mode="text",
                 text=[f"Déplacement du capteur : {distance}"],
                 textposition="top left",
-                textfont=dict(size=8),
+                textfont=dict(size=10),
                 showlegend=False
             )
         )
@@ -151,7 +151,7 @@ def compute_structure(accel_data, initial_positions, gyro_data):
                 mode='text',
                 text=[f'Max deformation: {formatted_def}'],
                 textposition='top right',
-                textfont=dict(size=8),
+                textfont=dict(size=10),
                 marker=dict(size=1, color="black"),
                 showlegend=False
             )
