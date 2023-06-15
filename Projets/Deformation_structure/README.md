@@ -17,7 +17,7 @@ streamlit run streamlit_app.py
 
 **Aperçu**
 <p align="center">
-  <img src="Projets/Deformation_structure/preview.jpg" alt="preview projet deformation" width="800">
+  <img src="preview.jpg" alt="preview projet deformation" width="800">
 </p>
 
 <br>
