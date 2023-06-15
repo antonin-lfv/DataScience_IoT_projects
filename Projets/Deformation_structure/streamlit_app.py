@@ -1,10 +1,17 @@
-from Projets.Deformation_structure.utils import *
+from utils import *
 from fastdist import fastdist
 import json
 from pymongo import MongoClient
+import streamlit as st
+
+# ====== Streamlit ====== #
+st.set_page_config(layout="wide")
+st.title("Deformation structure")
+st.divider()
+figure = st.empty()
 
 # Configuration du serveur MQTT
-file_path_config = "Projets/Deformation_structure/config.json"
+file_path_config = "config.json"
 # le fichier config ressemble à ça :
 # {
 #   "ssid" : "your ssid",
@@ -150,20 +157,28 @@ def compute_structure(accel_data, initial_positions, gyro_data):
             )
         )
     fig.update_layout(
-        title=f"Aperçu de la structure",
         scene=dict(
             xaxis=dict(range=[xmin, xmax], ),
             yaxis=dict(range=[ymin, ymax], ),
             zaxis=dict(range=[zmin * 0.9, zmax * 1.1], ),
+            # add zoom
+            camera=dict(
+                up=dict(x=0, y=0, z=1),
+                center=dict(x=0, y=0, z=0),
+                eye=dict(x=1.25, y=1.25, z=1.25))
         ),
+        width=800,
+        height=800,
         template="plotly_white",
+        # set margin to 0
+        margin=dict(l=0, r=0, b=0, t=0)
     )
 
     return fig, moved_points_control
 
 
 fig, new_positions = compute_structure(accel_data, initial_positions, gyro_data)
-plot(fig)
+figure.plotly_chart(fig, use_container_width=True)
 
 # === Insert new positions in mongoDB only if the last timestamp in history_positions is different
 # from the last timestamp of sensor_data collection ===
