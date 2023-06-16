@@ -157,7 +157,7 @@ class Bezier_Vector_3D:
                                                         marker=dict(size=2,
                                                                     color="#0d0183",
                                                                     ),
-                                                        name=f"Segment {i}"
+                                                        showlegend=False,
                                                         ))
             else:
                 plotly_bezier_curve.append(go.Scatter3d(x=x_curve,
@@ -166,7 +166,7 @@ class Bezier_Vector_3D:
                                                         marker=dict(size=1,
                                                                     color=difference_normal_deformation,
                                                                     colorscale='jet'),
-                                                        name=f"Segment {i}"
+                                                        showlegend=False,
                                                         ))
             if self.show_control_points:
                 plotly_control_points.append(go.Scatter3d(x=x_pts,
