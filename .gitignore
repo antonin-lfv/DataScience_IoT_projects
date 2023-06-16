@@ -170,3 +170,6 @@ cython_debug/
 streamlit_tools.py
 /Projets/Deformation_structure/config.json
 /temp-plot.html
+
+.DS_Store
+Projets/.DS_Store
