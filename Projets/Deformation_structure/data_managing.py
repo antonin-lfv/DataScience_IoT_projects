@@ -75,15 +75,15 @@ def store_data_in_db(data_buffer):
 def add_test_data():
     # accelerations
     accel_data = {'capteur0': {'x': 3.1, 'y': 2., 'z': 8.1},
-                  'capteur1': {'x': 3.1, 'y': 2.0, 'z': 8.1},
-                  'capteur2': {'x': 3., 'y': 2.35, 'z': 8.2},
-                  'capteur3': {'x': 3., 'y': 2.6, 'z': 8.1}}
+                  'capteur1': {'x': 3., 'y': 2.1, 'z': 8.},
+                  'capteur2': {'x': 3.1, 'y': 2.35, 'z': 8.1},
+                  'capteur3': {'x': 3.1, 'y': 2.5, 'z': 8.2}}
 
     # Exemple de données de gyroscope
-    gyro_data = {'capteur0': {'x': 3, 'y': 2.1, 'z': 8},
-                 'capteur1': {'x': 3.2, 'y': 2.3, 'z': 8.1},
-                 'capteur2': {'x': 3.1, 'y': 2.5, 'z': 8.3},
-                 'capteur3': {'x': 3.09, 'y': 2.1, 'z': 8.}}
+    gyro_data = {'capteur0': {'x': 3, 'y': 2.2, 'z': 8},
+                 'capteur1': {'x': 3.1, 'y': 2.2, 'z': 8.},
+                 'capteur2': {'x': 3., 'y': 2.4, 'z': 8.2},
+                 'capteur3': {'x': 3.1, 'y': 2., 'z': 8.1}}
 
     buffer = {"acceleration": accel_data, "gyroscope": gyro_data}
     store_data_in_db(buffer)
