@@ -12,7 +12,7 @@
 <p align="center">
  <a href="#"><img src="https://img.shields.io/badge/Raspberry_Pi-FFF?logo=raspberry+pi&logoColor=C51A4A" alt="Raspberry Pi"></a>
  &nbsp;
- <a href="#"><img src="https://img.shields.io/badge/Arduino-FFF?logo=arduino" alt="Arduino"></a>
+ <a href="#"><img src="https://img.shields.io/badge/Arduino-FFF?logo=arduino&logoColor=00838B" alt="Arduino"></a>
  &nbsp;
  <a href="#"><img src="https://img.shields.io/badge/ESP32-FFF?logo=esphome&logoColor=000" alt="ESP32"></a>
  &nbsp;
@@ -57,7 +57,7 @@ Pour faciliter la recherche en fonction de vos besoins, chaque projet est doté 
 # Projets
 
 ### Détection d'anomalies vibratoires avec capteur accéléromètre et auto-encodeur de débruitage
-[![Code source](https://img.shields.io/badge/Code_source-000?logo=Visual+Studio+Code)](Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/README.md) &nbsp; [![Article lié](https://img.shields.io/badge/Article_lié-000?logo=Medium)](https://medium.com/@antoninlefevre45/auto-encodeur-de-débruitage-pour-la-détection-danomalies-vibratoires-117d2ad3a94b) &nbsp; [![PyTorch](https://img.shields.io/badge/PyTorch-FFF?logo=pytorch)]() &nbsp;  [![Arduino](https://img.shields.io/badge/Arduino-FFF?logo=Arduino)]() &nbsp; [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]()
+[![Code source](https://img.shields.io/badge/Code_source-000?logo=Visual+Studio+Code)](Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/README.md) &nbsp; [![Article lié](https://img.shields.io/badge/Article_lié-000?logo=Medium)](https://medium.com/@antoninlefevre45/auto-encodeur-de-débruitage-pour-la-détection-danomalies-vibratoires-117d2ad3a94b) &nbsp; [![PyTorch](https://img.shields.io/badge/PyTorch-FFF?logo=pytorch)]() &nbsp;  [![Arduino](https://img.shields.io/badge/Arduino-FFF?logo=Arduino&logoColor=00838B)]() &nbsp; [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]()
 
 Ce projet permet de détecter les chocs en temps réel à l'aide d'un modèle d'autoencodeur de débruitage et d'un capteur d'accélération. 
 L'objectif est d'identifier les chocs parmi les données du capteur en éliminant le bruit et les variations normales d'accélération.
