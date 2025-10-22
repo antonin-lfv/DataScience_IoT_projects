@@ -56,6 +56,10 @@ Pour faciliter la recherche en fonction de vos besoins, chaque projet est doté 
 
 # Projets
 
+### À venir
+
+[![ElioBot](https://img.shields.io/badge/ElioBot-FFF?logo=Probot&logoColor=594D9B)](https://eliobot.com) &nbsp; [![MQTT](https://img.shields.io/badge/MQTT-FFF?logo=mqtt&logoColor=000)]() &nbsp; [![ESP32](https://img.shields.io/badge/ESP32-FFF?logo=esphome&logoColor=000)]()
+
 ### Détection d'anomalies vibratoires avec capteur accéléromètre et auto-encodeur de débruitage
 [![Code source](https://img.shields.io/badge/Code_source-000?logo=Visual+Studio+Code)](Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/README.md) &nbsp; [![Article lié](https://img.shields.io/badge/Article_lié-000?logo=Medium)](https://medium.com/@antoninlefevre45/auto-encodeur-de-débruitage-pour-la-détection-danomalies-vibratoires-117d2ad3a94b) &nbsp; [![PyTorch](https://img.shields.io/badge/PyTorch-FFF?logo=pytorch)]() &nbsp;  [![Arduino](https://img.shields.io/badge/Arduino-FFF?logo=Arduino&logoColor=00838B)]() &nbsp; [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]()
 
