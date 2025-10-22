@@ -98,7 +98,7 @@ Pour lancer l'interface, le serveur MQTT et la lecture des données du serveur, 
 <br>
 
 <p align="center">
-  <img src="Projets/Station_meteo_prediction_temps_ML/preview.jpg" alt="preview projet weather station" width="800">
+  <img src="Projets/Station_meteo_prediction_temps_ML/preview.png" alt="preview projet weather station" width="800">
 </p>
 
 <br>
@@ -122,7 +122,7 @@ streamlit run streamlit_app.py
 
 <br>
 <p align="center">
-  <img src="Projets/Deformation_structure/preview.jpg" alt="preview projet deformation" width="800">
+  <img src="Projets/Deformation_structure/preview.png" alt="preview projet deformation" width="800">
 </p>
 
 <br>
