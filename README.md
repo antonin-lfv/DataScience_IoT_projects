@@ -23,6 +23,8 @@
  <a href="#"><img src="https://img.shields.io/badge/Streamlit-FFF?logo=streamlit" alt="Streamlit"></a>
 &nbsp;
 <a href="#"><img src="https://img.shields.io/badge/MQTT-FFF?logo=MQTT&logoColor=000" alt="MQTT"></a>
+&nbsp;
+<a href="https://eliobot.com"><img src="https://img.shields.io/badge/ElioBot-FFF?logo=Probot&logoColor=594D9B" alt="ElioBot"></a>
 
 </p>
 
