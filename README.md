@@ -1,7 +1,7 @@
 
 <h1 align="center">
   <br>
-  <a href="http://www.amitmerchant.com/electron-markdownify"><img src="images/background.jpg" alt="Markdownify" width="700"></a>
+  <a href="http://www.amitmerchant.com/electron-markdownify"><img src="images/background2.png" alt="Markdownify" width="700"></a>
   <br><br>
   Data science & IoT
   <br>
@@ -75,8 +75,9 @@ Pour lancer l'interface, exécutez la commande suivante dans le dossier du proje
 ```bash
 streamlit run streamlit_real_time_interface.py
 ```
- 
-**Aperçu**
+
+<br>
+
 <p align="center">
   <img src="Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/preview.png" alt="preview projet anoamlies detection" width="800">
 </p>
@@ -94,7 +95,8 @@ Pour lancer l'interface, le serveur MQTT et la lecture des données du serveur, 
 ./run_weather_station.sh
 ```
  
-**Aperçu**
+<br>
+
 <p align="center">
   <img src="Projets/Station_meteo_prediction_temps_ML/preview.jpg" alt="preview projet weather station" width="800">
 </p>
@@ -118,7 +120,7 @@ Puis lancer l'interface:
 streamlit run streamlit_app.py
 ```
 
-**Aperçu**
+<br>
 <p align="center">
   <img src="Projets/Deformation_structure/preview.jpg" alt="preview projet deformation" width="800">
 </p>
