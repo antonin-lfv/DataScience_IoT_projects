@@ -1,7 +1,7 @@
 
 <h1 align="center">
   <br>
-  <a href="http://www.amitmerchant.com/electron-markdownify"><img src="images/background.png" alt="Markdownify" width="700"></a>
+  <a href="http://www.amitmerchant.com/electron-markdownify"><img src="images/background.jpg" alt="Markdownify" width="700"></a>
   <br><br>
   Data science & IoT
   <br>
@@ -78,7 +78,7 @@ streamlit run streamlit_real_time_interface.py
  
 **Aperçu**
 <p align="center">
-  <img src="Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/preview.jpg" alt="preview projet anoamlies detection" width="800">
+  <img src="Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/preview.png" alt="preview projet anoamlies detection" width="800">
 </p>
 
 <br>
