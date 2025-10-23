@@ -15,9 +15,10 @@ Puis lancer l'interface:
 streamlit run streamlit_app.py
 ```
 
-**Aperçu**
+<br>
+
 <p align="center">
-  <img src="preview.jpg" alt="preview projet deformation" width="800">
+  <img src="preview.png" alt="preview projet deformation" width="800">
 </p>
 
 <br>

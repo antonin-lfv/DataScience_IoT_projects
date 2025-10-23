@@ -12,9 +12,10 @@ Pour lancer l'interface, exécutez la commande suivante dans le dossier du proje
 streamlit run streamlit_real_time_interface.py
 ```
  
-**Aperçu**
+<br>
+
 <p align="center">
-  <img src="preview.jpg" alt="preview projet anoamlies detection" width="800">
+  <img src="preview.png" alt="preview projet anoamlies detection" width="800">
 </p>
 
 <br>

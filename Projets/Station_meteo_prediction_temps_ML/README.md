@@ -9,9 +9,10 @@ Pour lancer l'interface, le serveur MQTT et la lecture des données du serveur, 
 ./run_weather_station.sh
 ```
  
-**Aperçu**
+<br>
+
 <p align="center">
-  <img src="preview.jpg" alt="preview projet weather station" width="800">
+  <img src="preview.png" alt="preview projet weather station" width="800">
 </p>
 
 <br>
