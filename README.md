@@ -38,11 +38,15 @@
 
 # Liens utiles
 
-- 📘 [Documentation Arduino](https://docs.arduino.cc/)
-- 🎥 [Chaîne YouTube U=RI](https://www.youtube.com/channel/UCVqx3vXNghSqUcVg2nmegYA)
-- 🧠 [Chaîne YouTube BoilingBrains](https://www.youtube.com/channel/UCKAzZCVzqkdvxX6VLTwyVMQ)
-- 🛒 [Matériel — AZ-Delivery](https://www.az-delivery.de/fr/)
-- 🤖 [Projet ElioBot](https://eliobot.com)
+- Documentation [Arduino](https://docs.arduino.cc/?_gl=1*q1xbuk*_ga*MTE1NjQ3NzM5Mi4xNjI5OTk4MDM0*_ga_NEXN8H46L5*MTYzMTIyMDEzMy4xMi4xLjE2MzEyMjAxMzMuMA..)
+
+- Chaîne YouTube [U=RI](https://www.youtube.com/channel/UCVqx3vXNghSqUcVg2nmegYA) <br>
+
+- Chaîne YouTube [BoilingBrains](https://www.youtube.com/channel/UCKAzZCVzqkdvxX6VLTwyVMQ) <br>
+
+- Site d'achat de matériel [AZ-Delivery](https://www.az-delivery.de/fr/)
+
+- Site du [ElioBot](https://eliobot.com)
 
 <br>
 
