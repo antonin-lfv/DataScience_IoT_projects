@@ -60,7 +60,7 @@ Pour faciliter la recherche en fonction de vos besoins, chaque projet est doté 
 
 # Projets
 
-### Pilotage vocal d’un robot ESP32 avec TinySpeech-M quantifié et embarqué
+### Pilotage vocal d’un robot ESP32 avec TinySpeech-M quantifié et embarqué **(en cours)**
 
 [![ElioBot](https://img.shields.io/badge/ElioBot-FFF?logo=Probot&logoColor=594D9B)](https://eliobot.com) &nbsp; [![ESP32](https://img.shields.io/badge/ESP32-FFF?logo=esphome&logoColor=000)]() &nbsp; [![PyTorch](https://img.shields.io/badge/PyTorch-FFF?logo=pytorch)]() &nbsp; [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]()
 
