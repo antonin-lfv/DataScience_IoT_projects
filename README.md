@@ -46,6 +46,8 @@
 
 - Site d'achat de matériel [AZ-Delivery](https://www.az-delivery.de/fr/)
 
+- Site du [ElioBot](https://eliobot.com)
+
 <br>
 
 # Introduction
@@ -58,9 +60,11 @@ Pour faciliter la recherche en fonction de vos besoins, chaque projet est doté 
 
 # Projets
 
-### À venir
+### Pilotage vocal d’un robot ESP32 avec TinySpeech-M quantifié et embarqué **(en cours)**
 
-[![ElioBot](https://img.shields.io/badge/ElioBot-FFF?logo=Probot&logoColor=594D9B)](https://eliobot.com) &nbsp; [![MQTT](https://img.shields.io/badge/MQTT-FFF?logo=mqtt&logoColor=000)]() &nbsp; [![ESP32](https://img.shields.io/badge/ESP32-FFF?logo=esphome&logoColor=000)]()
+[![ElioBot](https://img.shields.io/badge/ElioBot-FFF?logo=Probot&logoColor=594D9B)](https://eliobot.com) &nbsp; [![ESP32](https://img.shields.io/badge/ESP32-FFF?logo=esphome&logoColor=000)]() &nbsp; [![PyTorch](https://img.shields.io/badge/PyTorch-FFF?logo=pytorch)]() &nbsp; [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]()
+
+Ce projet montre comment piloter un robot (ElioBot) par commandes vocales grâce à un modèle TinySpeech-M entraîné sous PyTorch puis quantifié et compilé pour être exécuté en int8 sur un ESP32. Le signal audio est transformé en MFCC directement sur le microcontrôleur, puis passé au moteur d’inférence `C` dérivé du modèle initial, sans dépendance à PyTorch côté embarqué. Une logique de détection en temps réel est mise en place : le robot écoute en continu un flux audio, applique une fenêtre glissante sur le signal, filtre les segments trop faibles et ne valide une commande que si elle reste dominante sur plusieurs prédictions successives au-delà d’un seuil de confiance. Une fois une commande reconnue (par exemple `RIGHT`, `STOP` ou `GO`), l’ESP32 déclenche le mouvement correspondant sur le robot.
 
 ### Détection d'anomalies vibratoires avec capteur accéléromètre et auto-encodeur de débruitage
 [![Code source](https://img.shields.io/badge/Code_source-000?logo=Visual+Studio+Code)](Projets/Anomalies_vibratoires_accelerometre_AE_debruitage/README.md) &nbsp; [![Article lié](https://img.shields.io/badge/Article_lié-000?logo=Medium)](https://medium.com/@antoninlefevre45/auto-encodeur-de-débruitage-pour-la-détection-danomalies-vibratoires-117d2ad3a94b) &nbsp; [![PyTorch](https://img.shields.io/badge/PyTorch-FFF?logo=pytorch)]() &nbsp;  [![Arduino](https://img.shields.io/badge/Arduino-FFF?logo=Arduino&logoColor=00838B)]() &nbsp; [![Streamlit](https://img.shields.io/badge/Streamlit-FFF?logo=streamlit)]()
